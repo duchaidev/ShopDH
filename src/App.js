@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense } from 'react';
+import { Route, Routes } from "react-router-dom";
 
-function App() {
+const HomePage = React.lazy(() => import("./pages/HomePage"));
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='w-[100%]'>
+      <Suspense
+        fallback={
+          <div className="bg-[#1F2833] min-h-screen min-w-full flex items-center justify-center">
+            <span>Loading</span>
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<HomePage></HomePage>}></Route>
+        </Routes>
+      </Suspense>
     </div>
   );
-}
+};
 
+// export default React.memo(App);
 export default App;
