@@ -1,7 +1,9 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from "react-router-dom";
+import ProductDetails from './pages/ProductDetails';
 
 const HomePage = React.lazy(() => import("./pages/HomePage"));
+const Product = React.lazy(() => import("./pages/Product"));
 const App = () => {
   return (
     <div className='w-[100%]'>
@@ -14,6 +16,8 @@ const App = () => {
       >
         <Routes>
           <Route path="/" element={<HomePage></HomePage>}></Route>
+          <Route path="/product" element={<Product></Product>}></Route>
+          <Route path="/product-details" element={<ProductDetails></ProductDetails>}></Route>
         </Routes>
       </Suspense>
     </div>

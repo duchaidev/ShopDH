@@ -50,13 +50,13 @@ const dataPopularCode =
             price: "140.000"
         },
     ];
-const PopularGraphics = () => {
+const Popular = ({ title, url, explore }) => {
     return (
-        <div className="mt-16 px-[5%] pb-5">
+        <div className="mt-20 px-[5%] pb-5">
             <div className="flex justify-between">
-                <h2 className="text-[22px] font-bold mb-2">Popular Graphics</h2>
-                <NavLink to="/" className="flex items-end gap-4 group">
-                    <span className="transition-all group-hover:text-blue6">Explore Graphics</span>
+                <h2 className="text-[22px] font-bold mb-2">{title}</h2>
+                <NavLink to={url} className="flex items-end gap-4 group">
+                    <span className="transition-all group-hover:text-blue6">{explore}</span>
                     <svg width="8" height="12" viewBox="0 0 8 12" className="transition-all group-hover:text-blue6 stroke-gray1 group-hover:stroke-blue6" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1L6 6L1 11" strokeWidth="2" />
                     </svg>
@@ -71,4 +71,4 @@ const PopularGraphics = () => {
     );
 };
 
-export default PopularGraphics;
+export default Popular;

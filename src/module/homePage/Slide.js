@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import IconSearch from '../../components/header/IconSearch';
 import IconDown from '../../components/header/IconDown';
 import { NavLink } from 'react-router-dom';
+import DropDownSlide from '../../components/dropDown/DropDownSlide';
+import { DropdownContext } from '../../context/dropdown-context';
 
 const data = [
     {
@@ -21,6 +23,7 @@ const data = [
     },
 ];
 const SlideHome = () => {
+    const { toggle2 } = useContext(DropdownContext);
     return (
         <div className="flex flex-col items-center mt-20 px-9">
             <div className="w-[60%] flex items-center flex-col">
@@ -34,9 +37,10 @@ const SlideHome = () => {
                         className="flex-grow h-full px-4 outline-none bg-blue2"
                         placeholder="Search millions of photos, fonts, graphics, and more, ..."
                     />
-                    <button className="flex gap-3 px-5 border-l border-blue1 items-center h-[30px]">
+                    <button className="relative flex gap-3 px-5 border-l border-blue1 items-center h-[30px]" onClick={toggle2}>
                         <span className="text-gray1">All Items</span>
                         <IconDown></IconDown>
+                        <DropDownSlide width={"135px"}></DropDownSlide>
                     </button>
                 </div>
                 <div className="mt-[25px] flex gap-4">

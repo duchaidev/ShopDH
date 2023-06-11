@@ -29,7 +29,7 @@ const ItemBlog = ({ slugBlog, image, title, content, createDate, author, slugAut
                         >
                             {author}
                         </NavLink>
-                        <span className="text-[14px] text-gray1">{createDate}3</span>
+                        <span className="text-[14px] text-gray1">{createDate}</span>
                     </div>
                     <NavLink to={slugBlog} className="mr-2 text-blue6 hover:text-blue7 transition-all text-[14px]">
                         Read More

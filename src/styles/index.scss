@@ -49,3 +49,20 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
   background-color: #008d73;
 }
+
+.dropdown-content {
+  opacity: 0;
+  transition: all 0.25s ease;
+visibility: hidden;
+  transform: translateY(-10px); /* Có thể thay đổi giá trị này để điều chỉnh khoảng cách cuộn */
+}
+
+.dropdown-content.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(5px); /* Có thể thay đổi giá trị này để điều chỉnh khoảng cách cuộn */
+}
+
+.bg_linear{
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) -127.71%, rgba(255, 255, 255, 0) -127.71%, #FFFFFF 86.98%);
+}
