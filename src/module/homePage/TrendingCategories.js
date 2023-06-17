@@ -1,45 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ItemTrendingCategories from "../../components/home/ItemTrendingCategories";
+import axios from "axios";
 
-const dataTrendsCate = [
-    {
-        id: 1,
-        title: "Instagram Template",
-        image: "21011598.jpg",
-        url: "/",
-    },
-    {
-        id: 2,
-        title: "Instagram Template",
-        image: "21011598.jpg",
-        url: "/",
-    },
-    {
-        id: 3,
-        title: "Instagram Template",
-        image: "21011598.jpg",
-        url: "/",
-    },
-    {
-        id: 4,
-        title: "Instagram Template",
-        image: "21011598.jpg",
-        url: "/",
-    },
-    {
-        id: 5,
-        title: "Instagram Template",
-        image: "21011598.jpg",
-        url: "/",
-    },
-    {
-        id: 6,
-        title: "Instagram Template",
-        image: "21011598.jpg",
-        url: "/",
-    },
-];
 const TrendingCategories = () => {
+    const [dataTrendsCate, setDataTrendsCate] = useState([]);
+    useEffect(() => {
+        async function fetchDataTrendsCate() {
+            try {
+                const dataTrendsCateRes = await axios.get("http://localhost:3000/TrendingCategories");
+                setDataTrendsCate(dataTrendsCateRes.data);
+            } catch (err) { console.error("err: " + err); }
+        }
+        fetchDataTrendsCate();
+    }, []);
+
     return (
         <div className="mt-20 px-[5%]">
             <h2 className="text-[22px] font-bold">Browse Trending Categories</h2>

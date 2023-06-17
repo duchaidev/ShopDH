@@ -7,6 +7,7 @@ import IconCart from './../../components/header/IconCart';
 import DropDown from "../../components/dropDown/DropDown";
 import { DropdownContext } from "../../context/dropdown-context";
 import DropdownInfo from "../../components/dropDown/DropdownInfo";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
     const { toggle, value, setShow1 } = useContext(DropdownContext);
@@ -27,10 +28,10 @@ const Header = () => {
                     </div>
 
                 </div>
-                <div className="flex flex-col items-center">
+                <NavLink to="/" className="flex flex-col items-center">
                     <Logo></Logo>
                     <span className="text-base font-semibold">DevHouse</span>
-                </div>
+                </NavLink>
                 <div className="flex items-center justify-end flex-1 gap-10">
                     <span className="font-bold">Free Download</span>
                     <button className="px-4 py-3 text-white rounded-md bg-blue6">Trở thành người bán</button>

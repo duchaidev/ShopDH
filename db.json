@@ -1,0 +1,15 @@
+{
+    "TrendingCategories": [
+      { "id": 1, "title": "Bootstrap 5", "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/1200px-Bootstrap_logo.svg.png", "url":"/"},
+      { "id": 2, "title": "Tailwindcss", "image": "https://avatars.githubusercontent.com/u/67109815?v=4&s=400", "url":"/"},
+      { "id": 3, "title": "Shopify Theme", "image": "https://d3ui957tjb5bqd.cloudfront.net/images/1/homepage/icons/shopify-themes.webp", "url":"/"},
+      { "id": 4, "title": "Vector Graphics", "image": "https://d3ui957tjb5bqd.cloudfront.net/images/1/homepage/icons/vector-graphics.webp", "url":"/"},
+      { "id": 5, "title": "Canva Templates", "image": "https://d3ui957tjb5bqd.cloudfront.net/images/1/homepage/icons/canva-templates.webp", "url":"/"},
+      { "id": 6, "title": "Display Font", "image": "https://d3ui957tjb5bqd.cloudfront.net/images/1/homepage/icons/display-fonts.webp", "url":"/"}
+
+    ],
+    "comments": [
+      { "id": 1, "body": "some comment", "postId": 1 }
+    ],
+    "profile": { "name": "typicode" }
+  }

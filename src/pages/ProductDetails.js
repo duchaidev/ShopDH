@@ -6,6 +6,8 @@ import IconDate from './../components/icon/IconDate';
 import IconSize from './../components/icon/IconSize';
 import IconRule from './../components/icon/IconRule';
 import IconLayer from './../components/icon/IconLayer';
+import CommentProduct from '../module/productDetails/CommentProduct';
+import MoreProduct from '../module/productDetails/MoreProduct';
 
 const ProductDetails = () => {
     return (
@@ -147,6 +149,21 @@ const ProductDetails = () => {
                             <span className=''>Layered</span>
                         </div>
                         <span className='font-semibold cursor-pointer text-blue7'>Preview the Files</span>
+                    </div>
+                </div>
+                {/*-----------------------------------------productDetail Comment-----------------------------------------*/}
+                <CommentProduct></CommentProduct>
+                {/*-----------------------------------------productDetail You May Also Like-----------------------------------------*/}
+                <MoreProduct></MoreProduct>
+                {/*-----------------------------------------productDetail Keep Exploring-----------------------------------------*/}
+                <div className='flex flex-col mt-20'>
+                    <h2 className="text-[22px] font-bold mb-2">Keep Exploring</h2>
+                    <div className='flex gap-3 mt-5'>
+                        <button className='px-5 py-2 bg-[#dceefc] hover:bg-[#b9ddff] transition-all rounded-full'>Stylish</button>
+                        <button className='px-5 py-2 bg-[#dceefc] hover:bg-[#b9ddff] transition-all rounded-full'>Classy</button>
+                        <button className='px-5 py-2 bg-[#dceefc] hover:bg-[#b9ddff] transition-all rounded-full'>Font</button>
+                        <button className='px-5 py-2 bg-[#dceefc] hover:bg-[#b9ddff] transition-all rounded-full'>Typeface</button>
+                        <button className='px-5 py-2 bg-[#dceefc] hover:bg-[#b9ddff] transition-all rounded-full'>Sharp</button>
                     </div>
                 </div>
             </div>
