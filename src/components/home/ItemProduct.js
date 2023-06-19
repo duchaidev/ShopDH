@@ -54,7 +54,7 @@ const ItemProduct = ({
             <div className="flex flex-col gap-2 p-2 scroll-px-32">
                 <NavLink
                     to={slugProduct}
-                    className="text-[14px] font-semibold  cursor-pointer"
+                    className="text-[14px] font-semibold leading-5 cursor-pointer"
                 >
                     {title}
                 </NavLink>

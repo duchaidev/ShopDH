@@ -66,3 +66,45 @@ visibility: hidden;
 .bg_linear{
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) -127.71%, rgba(255, 255, 255, 0) -127.71%, #FFFFFF 86.98%);
 }
+
+@keyframes zoomIn {
+  0% {
+    width: 100px;
+    height: 40px;
+    opacity: 0;
+    display: block;
+  }
+  100% {
+    width: 630px;
+    height: 500px;
+    opacity: 100;
+    display: block;
+  }
+}
+
+@keyframes zoomOut {
+  0% {
+    width: 630px;
+    height: 500px;
+    opacity: 100;
+    display: block;
+  }
+  90% {
+    width: 0px;
+    height: 0px;
+  }
+  100% {
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    border: none;
+  }
+}
+
+.zoomOut{
+  animation: zoomOut 0.3s ease 0s 1 forwards;
+}
+
+.zoomIn{
+  animation: zoomIn 0.3s ease 0s 1 forwards;
+}

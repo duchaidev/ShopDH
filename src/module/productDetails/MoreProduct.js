@@ -1,5 +1,4 @@
 import React from 'react';
-import Popular from '../homePage/Popular';
 import ItemProduct from '../../components/home/ItemProduct';
 import { NavLink } from 'react-router-dom';
 
@@ -7,7 +6,7 @@ const dataPopularCode =
     [
         {
             id: 1,
-            image: "21011598.jpg",
+            image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
             slugProduct: "/",
             title: "Seppo - Corporate One Page HTML Template",
             author: "LeDucHai",
@@ -16,7 +15,7 @@ const dataPopularCode =
         },
         {
             id: 2,
-            image: "21011598.jpg",
+            image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
             slugProduct: "/",
             title: "Seppo - Corporate One Page HTML Template",
             author: "LeDucHai",
@@ -25,7 +24,7 @@ const dataPopularCode =
         },
         {
             id: 3,
-            image: "21011598.jpg",
+            image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
             slugProduct: "/",
             title: "Seppo - Corporate One Page HTML Template",
             author: "LeDucHai",
@@ -34,7 +33,7 @@ const dataPopularCode =
         },
         {
             id: 4,
-            image: "21011598.jpg",
+            image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
             slugProduct: "/",
             title: "Seppo - Corporate One Page HTML Template",
             author: "LeDucHai",
@@ -43,7 +42,7 @@ const dataPopularCode =
         },
         {
             id: 5,
-            image: "21011598.jpg",
+            image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
             slugProduct: "/",
             title: "Seppo - Corporate One Page HTML Template",
             author: "LeDucHai",

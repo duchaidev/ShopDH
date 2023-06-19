@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import LayoutMain from '../layouts/LayoutMain';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import IconDown from './../components/header/IconDown';
 import IconDate from './../components/icon/IconDate';
 import IconSize from './../components/icon/IconSize';
@@ -10,26 +10,32 @@ import CommentProduct from '../module/productDetails/CommentProduct';
 import MoreProduct from '../module/productDetails/MoreProduct';
 
 const ProductDetails = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        // window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    }, []);
+    const { slug } = useParams();
+    console.log(slug);
     return (
         <LayoutMain>
             <div className='px-[8%] mt-[50px]'>
                 <h1 className='font-bold text-[24px]'>Vintage Collage Creator 750+ Assets</h1>
                 <div className='flex items-center gap-4 mt-5'>
-                    <img src="21011598.jpg" alt="" className='w-[25px] h-[25px] object-cover rounded-full' />
+                    <img src="/21011598.jpg" alt="" className='w-[25px] h-[25px] object-cover rounded-full' />
                     <span className='text-[14px]'>Graphic Goods</span>
                 </div>
                 {/*-----------------------------------------productDetail Image + Price-----------------------------------------*/}
                 <div className='grid grid-cols-10 gap-10 mt-8'>
                     {/*-----------------------------------------productDetail Image-----------------------------------------*/}
                     <div className='flex flex-col col-span-7 gap-3'>
-                        <img src="img1.png" alt="" className='w-full object-cover aspect-[7/4] rounded-lg' />
+                        <img src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="" className='w-full object-cover aspect-[7/4] rounded-lg' />
                         <div className='flex items-center w-full gap-3'>
-                            <img src="img1.png" alt="" className='w-[12%] object-cover aspect-[7/4]' />
-                            <img src="img1.png" alt="" className='w-[12%] object-cover aspect-[7/4]' />
-                            <img src="img1.png" alt="" className='w-[12%] object-cover aspect-[7/4]' />
-                            <img src="img1.png" alt="" className='w-[12%] object-cover aspect-[7/4]' />
-                            <img src="img1.png" alt="" className='w-[12%] object-cover aspect-[7/4]' />
-                            <img src="img1.png" alt="" className='w-[12%] object-cover aspect-[7/4]' />
+                            <img src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="" className='w-[12%] object-cover aspect-[7/4]' />
+                            <img src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="" className='w-[12%] object-cover aspect-[7/4]' />
+                            <img src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="" className='w-[12%] object-cover aspect-[7/4]' />
+                            <img src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="" className='w-[12%] object-cover aspect-[7/4]' />
+                            <img src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="" className='w-[12%] object-cover aspect-[7/4]' />
+                            <img src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80" alt="" className='w-[12%] object-cover aspect-[7/4]' />
                             <button className='flex flex-col items-center justify-center ml-4'>
                                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0 14C0 16.7689 0.821086 19.4757 2.35943 21.778C3.89777 24.0803 6.08427 25.8747 8.64243 26.9343C11.2006 27.9939 14.0155 28.2712 16.7313 27.731C19.447 27.1908 21.9416 25.8574 23.8995 23.8995C25.8574 21.9416 27.1908 19.447 27.731 16.7313C28.2712 14.0155 27.9939 11.2006 26.9343 8.64243C25.8747 6.08427 24.0803 3.89777 21.778 2.35943C19.4757 0.821086 16.7689 0 14 0C10.287 0 6.72601 1.475 4.1005 4.1005C1.475 6.72601 0 10.287 0 14ZM6 13H18.15L12.57 7.393L14 6L22 14L14 22L12.57 20.573L18.15 15H6V13Z" fill="#AFAFAF" />

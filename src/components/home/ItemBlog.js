@@ -14,7 +14,7 @@ const ItemBlog = ({ slugBlog, image, title, content, createDate, author, slugAut
             <div className="flex flex-col gap-3 p-2 scroll-px-32">
                 <NavLink
                     to={slugBlog}
-                    className="text-[14px] font-semibold  cursor-pointer "
+                    className="text-[14px] font-semibold  cursor-pointer leading-5"
                 >
                     {title}
                 </NavLink>

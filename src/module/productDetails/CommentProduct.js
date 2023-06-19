@@ -6,7 +6,7 @@ import IconHeartYellow from "../../components/icon/IconHeartYellow";
 const dataPopularCode = [
     {
         id: 1,
-        image: "21011598.jpg",
+        image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
         slugProduct: "/",
         title: "Seppo - Corporate One Page HTML Template",
         author: "LeDucHai",
@@ -15,7 +15,7 @@ const dataPopularCode = [
     },
     {
         id: 2,
-        image: "21011598.jpg",
+        image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
         slugProduct: "/",
         title: "Seppo - Corporate One Page HTML Template",
         author: "LeDucHai",
@@ -24,7 +24,7 @@ const dataPopularCode = [
     },
     {
         id: 3,
-        image: "21011598.jpg",
+        image: "https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
         slugProduct: "/",
         title: "Seppo - Corporate One Page HTML Template",
         author: "LeDucHai",
@@ -68,7 +68,7 @@ const CommentProduct = () => {
                 <div className="grid grid-cols-4 gap-8 mt-[35px]">
                     <div className="py-[35px] flex gap-3 px-[15%] justify-center items-center flex-col shadow-md">
                         <img
-                            src="21011598.jpg"
+                            src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                             alt=""
                             className="w-[30%] rounded-sm aspect-square object-cover"
                         />
@@ -195,7 +195,7 @@ const CommentProduct = () => {
                             <div className="flex flex-col gap-3 mt-14">
                                 <div className="flex items-center gap-4">
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="object-cover w-10 h-10"
                                     />
@@ -234,22 +234,22 @@ const CommentProduct = () => {
                                 </span>
                                 <div className="flex items-center gap-5">
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
@@ -279,7 +279,7 @@ const CommentProduct = () => {
                             <div className="flex flex-col gap-3 mt-14">
                                 <div className="flex items-center gap-4">
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="object-cover w-10 h-10"
                                     />
@@ -309,22 +309,22 @@ const CommentProduct = () => {
                                 </span>
                                 <div className="flex items-center gap-5">
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
                                     <img
-                                        src="21011598.jpg"
+                                        src="https://images.unsplash.com/photo-1666919643134-d97687c1826c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80"
                                         alt=""
                                         className="w-[70px] aspect-square object-cover cursor-pointer"
                                     />
