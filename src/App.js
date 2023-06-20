@@ -1,9 +1,13 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from "react-router-dom";
-import ProductDetails from './pages/ProductDetails';
 
+const LayoutMain = React.lazy(() => import("./layouts/LayoutMain"));
+const LayoutProfile = React.lazy(() => import("./layouts/LayoutProfile"));
 const HomePage = React.lazy(() => import("./pages/HomePage"));
-const Product = React.lazy(() => import("./pages/Product"));
+const ProductPage = React.lazy(() => import("./pages/ProductPage"));
+const ProductDetailsPage = React.lazy(() => import("./pages/ProductDetailsPage"));
+const CartPage = React.lazy(() => import("./pages/CartPage"));
+const HistoryProductPage = React.lazy(() => import("./pages/HistoryProductPage"));
 
 const App = () => {
 
@@ -17,9 +21,17 @@ const App = () => {
         }
       >
         <Routes>
-          <Route path="/" element={<HomePage></HomePage>}></Route>
-          <Route path="/product" element={<Product></Product>}></Route>
-          <Route path="/product-details/:slug" element={<ProductDetails></ProductDetails>}></Route>
+          <Route path='/' element={<LayoutMain></LayoutMain>}>
+            <Route path="/" element={<HomePage></HomePage>}></Route>
+            <Route path="/product" element={<ProductPage></ProductPage>}></Route>
+            <Route path="/cart" element={<CartPage></CartPage>}></Route>
+            <Route path="/product-details/:slug" element={<ProductDetailsPage></ProductDetailsPage>}></Route>
+          </Route>
+          <Route path='/' element={<LayoutMain></LayoutMain>}>
+            <Route element={<LayoutProfile></LayoutProfile>}>
+              <Route path="/profile/history-product" element={<HistoryProductPage></HistoryProductPage>}></Route>
+            </Route>
+          </Route>
         </Routes>
       </Suspense>
     </div>

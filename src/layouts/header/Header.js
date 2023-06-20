@@ -13,7 +13,7 @@ const Header = () => {
     const { toggle, value, setShow1 } = useContext(DropdownContext);
     const [show, setShow] = useState(false);
     return (
-        <div className="h-[120px] w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow">
+        <div className="h-[120px] top-0 w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow bg-white z-50">
             <div className="flex justify-between w-full mt-3">
                 <div className="flex-1">
                     <div className="w-[500px] relative h-[40px] border rounded-full border-blue1 bg-blue2 pr-4 flex items-center">
@@ -39,12 +39,14 @@ const Header = () => {
                     <div className="relative">
                         <div className="relative flex items-center gap-4" onClick={() => { setShow(!show) }}>
                             <input type="text" className="absolute w-full h-full bg-black opacity-0 cursor-pointer" onBlur={() => { setShow(false) }} />
-                            <img src="21011598.jpg" alt="" className="w-[25px] h-[25px] object-cover rounded-full" />
+                            <img src="/21011598.jpg" alt="" className="w-[25px] h-[25px] object-cover rounded-full" />
                             <IconDown></IconDown>
                         </div>
                         <DropdownInfo show={show}></DropdownInfo>
                     </div>
-                    <IconCart></IconCart>
+                    <NavLink to="/cart">
+                        <IconCart></IconCart>
+                    </NavLink>
                 </div>
             </div>
             <div className="flex items-center justify-center h-full">

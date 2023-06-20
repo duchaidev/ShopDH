@@ -50,6 +50,7 @@ body::-webkit-scrollbar-thumb {
   background-color: #008d73;
 }
 
+// Làm DropDown cho DropDown, DropDownInfo, DropDownSlide
 .dropdown-content {
   opacity: 0;
   transition: all 0.25s ease;
@@ -67,6 +68,11 @@ visibility: hidden;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) -127.71%, rgba(255, 255, 255, 0) -127.71%, #FFFFFF 86.98%);
 }
 
+
+//Làm animation Chat
+.zoomIn{
+  animation: zoomIn 0.3s ease 0s 1 forwards;
+}
 @keyframes zoomIn {
   0% {
     width: 100px;
@@ -81,17 +87,16 @@ visibility: hidden;
     display: block;
   }
 }
-
+//Làm animation Chat
+.zoomOut{
+  animation: zoomOut 0.3s ease 0s 1 forwards;
+}
 @keyframes zoomOut {
   0% {
     width: 630px;
     height: 500px;
     opacity: 100;
     display: block;
-  }
-  90% {
-    width: 0px;
-    height: 0px;
   }
   100% {
     width: 0px;
@@ -100,11 +105,76 @@ visibility: hidden;
     border: none;
   }
 }
-
-.zoomOut{
-  animation: zoomOut 0.3s ease 0s 1 forwards;
+//Làm animation Chat
+.hiddenChat{
+  animation: hiddenChat 0.3s ease 0s 1 forwards;
+}
+@keyframes hiddenChat {
+  0% {
+    width: 630px;
+    height: 500px;
+  }
+  100% {
+    width: 210px;
+    height: 500px;
+  }
+}
+//Làm animation Chat
+.showChat{
+  animation: showChat 0.2s ease 0s 1 forwards;
+}
+@keyframes showChat {
+  0% {
+    width: 210px;
+    height: 500px;
+  }
+  100% {
+    width: 630px;
+    height: 500px;
+  }
+}
+//Làm hiển thị màu cho menu profile
+.itemMenuProfile.active{
+    color: #00C09E;
+    p{
+      background-color: #00C09E;
+      border: #00C09E;
+    }
+    svg{
+      path{
+        fill: #00C09E;
+      }
+    }
 }
 
-.zoomIn{
-  animation: zoomIn 0.3s ease 0s 1 forwards;
+//Animation cho dropdown Profile
+.dropdownShowMenuProfile {
+  animation: dropdownShowMenuProfile 0.2s ease 0s 1 forwards;
+}
+
+@keyframes dropdownShowMenuProfile {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  100% {
+    height: auto;
+    opacity: 1;
+  }
+}
+
+.dropdownHiddenMenuProfile {
+  animation: dropdownHiddenMenuProfile 0.2s ease 0s 1 forwards;
+}
+
+@keyframes dropdownHiddenMenuProfile {
+  0% {
+    
+    height: auto;
+    opacity: 1;
+  }
+  100% {
+    height: 0;
+    opacity: 0;
+  }
 }

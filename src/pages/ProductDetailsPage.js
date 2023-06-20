@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
-import LayoutMain from '../layouts/LayoutMain';
 import { NavLink, useParams } from 'react-router-dom';
-import IconDown from './../components/header/IconDown';
-import IconDate from './../components/icon/IconDate';
-import IconSize from './../components/icon/IconSize';
-import IconRule from './../components/icon/IconRule';
-import IconLayer from './../components/icon/IconLayer';
+import IconDown from '../components/header/IconDown';
+import IconDate from '../components/icon/IconDate';
+import IconSize from '../components/icon/IconSize';
+import IconRule from '../components/icon/IconRule';
+import IconLayer from '../components/icon/IconLayer';
 import CommentProduct from '../module/productDetails/CommentProduct';
 import MoreProduct from '../module/productDetails/MoreProduct';
 
-const ProductDetails = () => {
+const ProductDetailsPage = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         // window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
@@ -17,7 +16,7 @@ const ProductDetails = () => {
     const { slug } = useParams();
     console.log(slug);
     return (
-        <LayoutMain>
+        <div>
             <div className='px-[8%] mt-[50px]'>
                 <h1 className='font-bold text-[24px]'>Vintage Collage Creator 750+ Assets</h1>
                 <div className='flex items-center gap-4 mt-5'>
@@ -173,8 +172,8 @@ const ProductDetails = () => {
                     </div>
                 </div>
             </div>
-        </LayoutMain>
+        </div>
     );
 };
 
-export default ProductDetails;
+export default ProductDetailsPage;

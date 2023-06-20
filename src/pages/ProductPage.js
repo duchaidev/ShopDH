@@ -1,64 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import LayoutMain from '../layouts/LayoutMain';
-import IconStar from './../components/icon/IconStar';
-import IconHeart from './../components/icon/IconHeart';
+import IconStar from '../components/icon/IconStar';
+import IconHeart from '../components/icon/IconHeart';
 import { NavLink } from 'react-router-dom';
 import IconBootstrap from '../components/icon/IconBootstrap';
-import IconDown from './../components/header/IconDown';
-import IconTick from './../components/icon/IconTick';
+import IconDown from '../components/header/IconDown';
+import IconTick from '../components/icon/IconTick';
 import ItemProduct from '../components/home/ItemProduct';
 import Popular from '../module/homePage/Popular';
 import axios from 'axios';
 
-const dataPopularCode =
-    [
-        {
-            id: 1,
-            image: "21011598.jpg",
-            slugProduct: "/",
-            title: "Seppo - Corporate One Page HTML Template",
-            author: "LeDucHai",
-            slugAuthor: "/",
-            price: "140.000"
-        },
-        {
-            id: 2,
-            image: "21011598.jpg",
-            slugProduct: "/",
-            title: "Seppo - Corporate One Page HTML Template",
-            author: "LeDucHai",
-            slugAuthor: "/",
-            price: "140.000"
-        },
-        {
-            id: 3,
-            image: "21011598.jpg",
-            slugProduct: "/",
-            title: "Seppo - Corporate One Page HTML Template",
-            author: "LeDucHai",
-            slugAuthor: "/",
-            price: "140.000"
-        },
-        {
-            id: 4,
-            image: "21011598.jpg",
-            slugProduct: "/",
-            title: "Seppo - Corporate One Page HTML Template",
-            author: "LeDucHai",
-            slugAuthor: "/",
-            price: "140.000"
-        },
-        {
-            id: 5,
-            image: "21011598.jpg",
-            slugProduct: "/",
-            title: "Seppo - Corporate One Page HTML Template",
-            author: "LeDucHai",
-            slugAuthor: "/",
-            price: "140.000"
-        },
-    ];
-const Product = () => {
+
+const ProductPage = () => {
     const [showDropDownFilter, setShowDropDownFilter] = useState(false);
     const [isActive, setIsActive] = useState(1);
     const [valueFilterDropDown, setValueFilterDropDown] = useState('');
@@ -84,7 +36,7 @@ const Product = () => {
         setShowFilters(!showFilters);
     }
     return (
-        <LayoutMain>
+        <div>
             <div className=''>
                 {/*-----------------------------------------title-----------------------------------------*/}
                 <div className='flex flex-col gap-6 py-[40px] px-[5%] bg-blue2'>
@@ -262,8 +214,8 @@ const Product = () => {
                     <Popular title="Popular Graphics123" explore="Explore Graphics" dataPopular={popular} url="/product"></Popular>
                 </div>
             </div>
-        </LayoutMain>
+        </div>
     );
 };
 
-export default Product;
+export default ProductPage;

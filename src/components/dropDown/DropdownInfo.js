@@ -12,14 +12,14 @@ const DropdownInfo = ({ show }) => {
                 </div>
             </div>
             <div className='flex flex-col pt-2 border-b border-blue1'>
-                <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1">Trang cá nhân</NavLink>
+                <NavLink to="/profile/history-product" className="px-3 py-[6px] hover:bg-blue1">Trang cá nhân</NavLink>
                 <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1">Thông báo</NavLink>
                 <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1 mb-2">Tin nhắn</NavLink>
             </div>
             <div className='flex flex-col pt-2 border-b border-blue1'>
                 <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1">Nạp/ Rút tiền</NavLink>
                 <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1">Mã khuyến mãi</NavLink>
-                <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1 mb-2">Lịch sử mua hàng</NavLink>
+                <NavLink to="/profile/history-product" className="px-3 py-[6px] hover:bg-blue1 mb-2">Lịch sử mua hàng</NavLink>
             </div>
             <div className='flex flex-col pt-2 border-b border-blue1'>
                 <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1">Liên hệ hỗ trợ/ báo cáo </NavLink>
