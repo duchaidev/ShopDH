@@ -56,7 +56,7 @@ const Blog = () => {
         }
     ]
     return (
-        <div className="mt-16 px-[5%] pb-5">
+        <div className="mt-16 px-[5%] pb-5 mb-28">
             <div className="flex justify-between">
                 <h2 className="text-[22px] font-bold mb-2">Tips, Tricks, and Trends</h2>
                 <NavLink to="/" className="flex items-end gap-4 group">

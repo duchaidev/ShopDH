@@ -15,6 +15,7 @@ module.exports = {
       'white': '#FFFFFF',
       'grayEC': '#ECECEC',
       'grayFC': '#FCFCFC',
+      'grayE8': '#e8e8e8',
       'gray1': '#8B8B8B',
       'gray2': '#505050',
       'blue1': '#CCD4DA',
@@ -25,7 +26,10 @@ module.exports = {
       'blue6': '#00C09E',
       'blue7': '#088178',
       'greenBorder': '#24FF00',
+      'greenText': '#0FB900',
       'transparent': 'transparent',
+      'bgProfile': '#F5F5F5'
+
     },
   },
   plugins: [],

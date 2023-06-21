@@ -178,3 +178,21 @@ visibility: hidden;
     opacity: 0;
   }
 }
+
+
+.dropDownShowDetailPriceProductHistory{
+  animation: dropDownShowDetailPriceProductHistory 0.25s ease 0s 1 forwards;
+}
+
+@keyframes dropDownShowDetailPriceProductHistory {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  100% {
+    height: auto;
+    opacity: 1;
+  }
+}
+
+
