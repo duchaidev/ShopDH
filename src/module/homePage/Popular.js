@@ -1,9 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import ItemProduct from '../../components/home/ItemProduct';
+import SkeletonItem from '../../components/skeleton/SkeletonItem';
 
 
-const Popular = ({ title, url, explore, dataPopular }) => {
+
+const Popular = ({ title, url, explore, isLoading, dataPopular }) => {
     return (
         <div className="mt-20 px-[5%] pb-5">
             <div className="flex justify-between">
@@ -15,10 +17,23 @@ const Popular = ({ title, url, explore, dataPopular }) => {
                     </svg>
                 </NavLink>
             </div>
-            <div className="grid w-full grid-cols-5 gap-6 mt-5">
-                {dataPopular?.map((item, index) => (
-                    <ItemProduct key={item.id} image={item.imageProduct} slugProduct={`/product-details/${item.slug}`} title={item.title} author={item.author} slugAuthor={item.slugAuthor} price={item.price} ></ItemProduct>
-                ))}
+            <div className='h-[300px]'>
+
+                {
+                    isLoading ?
+                        <div className='grid w-full grid-cols-5 gap-6 mt-5'>
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <div className='w-full h-full' key={index}>
+                                    <SkeletonItem></SkeletonItem>
+                                </div>
+                            ))}
+                        </div>
+                        : <div>
+                            <div className='grid w-full grid-cols-5 gap-6 mt-5'>{dataPopular?.map((item, index) => (
+                                <ItemProduct key={item.id} image={item.imageProduct} slugProduct={`/product-details/${item.slug}`} title={item.title} author={item.author} slugAuthor={item.slugAuthor} price={item.price} ></ItemProduct>
+                            ))}</div>
+                        </div>
+                }
             </div>
         </div>
     );

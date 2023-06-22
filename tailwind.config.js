@@ -28,8 +28,8 @@ module.exports = {
       'greenBorder': '#24FF00',
       'greenText': '#0FB900',
       'transparent': 'transparent',
-      'bgProfile': '#F5F5F5'
-
+      'bgProfile': '#F5F5F5',
+      'red': '#FF0000',
     },
   },
   plugins: [],

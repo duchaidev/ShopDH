@@ -83,24 +83,24 @@ const LayoutProfile = () => {
                                 } `}
                         >
                             <NavLink
-                                to="/"
-                                className="flex items-center gap-2 itemMenuProfile"
+                                to="/my-profile"
+                                className="flex items-center gap-2 itemMenuProfile "
                             >
-                                <span className="w-[6px] h-[6px] border rounded-full border-gray2"></span>
+                                <p className="w-[6px] h-[6px] border rounded-full border-gray2"></p>
                                 <span>Hồ sơ</span>
                             </NavLink>
                             <NavLink
-                                to="/"
+                                to="/profile/deposit-withdrawal"
                                 className="flex items-center gap-2 itemMenuProfile"
                             >
-                                <span className="w-[6px] h-[6px] border rounded-full border-gray2"></span>
+                                <p className="w-[6px] h-[6px] border rounded-full border-gray2"></p>
                                 <span>Nạp/Rút tiền</span>
                             </NavLink>
                             <NavLink
                                 to="/"
                                 className="flex items-center gap-2 itemMenuProfile"
                             >
-                                <span className="w-[6px] h-[6px] border rounded-full border-gray2"></span>
+                                <p className="w-[6px] h-[6px] border rounded-full border-gray2"></p>
                                 <span>Địa chỉ</span>
                             </NavLink>
                             <NavLink

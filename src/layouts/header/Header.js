@@ -37,12 +37,12 @@ const Header = () => {
                     <button className="px-4 py-3 text-white rounded-md bg-blue6">Trở thành người bán</button>
                     <IconNoti></IconNoti>
                     <div className="relative">
-                        <div className="relative flex items-center gap-4" onClick={() => { setShow(!show) }}>
+                        <div className="relative flex items-center gap-4" onMouseDown={() => { setShow(!show) }}>
                             <input type="text" className="absolute w-full h-full bg-black opacity-0 cursor-pointer" onBlur={() => { setShow(false) }} />
                             <img src="/21011598.jpg" alt="" className="w-[25px] h-[25px] object-cover rounded-full" />
                             <IconDown></IconDown>
+                            <DropdownInfo show={show}></DropdownInfo>
                         </div>
-                        <DropdownInfo show={show}></DropdownInfo>
                     </div>
                     <NavLink to="/cart">
                         <IconCart></IconCart>

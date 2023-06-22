@@ -8,6 +8,8 @@ const ProductPage = React.lazy(() => import("./pages/ProductPage"));
 const ProductDetailsPage = React.lazy(() => import("./pages/ProductDetailsPage"));
 const CartPage = React.lazy(() => import("./pages/CartPage"));
 const HistoryProductPage = React.lazy(() => import("./pages/HistoryProductPage"));
+const DepositWithdrawal = React.lazy(() => import("./pages/DepositWithdrawal"));
+const MyProfilePage = React.lazy(() => import("./pages/MyProfilePage"));
 
 const App = () => {
 
@@ -29,6 +31,8 @@ const App = () => {
           </Route>
           <Route path='/' element={<LayoutMain></LayoutMain>}>
             <Route element={<LayoutProfile></LayoutProfile>}>
+              <Route path="/my-profile" element={<MyProfilePage></MyProfilePage>}></Route>
+              <Route path="/profile/deposit-withdrawal" element={<DepositWithdrawal></DepositWithdrawal>}></Route>
               <Route path="/profile/history-product" element={<HistoryProductPage></HistoryProductPage>}></Route>
             </Route>
           </Route>
