@@ -97,14 +97,7 @@ const LayoutProfile = () => {
                                 <span>Nạp/Rút tiền</span>
                             </NavLink>
                             <NavLink
-                                to="/"
-                                className="flex items-center gap-2 itemMenuProfile"
-                            >
-                                <p className="w-[6px] h-[6px] border rounded-full border-gray2"></p>
-                                <span>Địa chỉ</span>
-                            </NavLink>
-                            <NavLink
-                                to="/"
+                                to="/profile/change-password"
                                 className="flex items-center gap-2 itemMenuProfile"
                             >
                                 <p className="w-[6px] h-[6px] border rounded-full border-gray2"></p>
@@ -112,7 +105,7 @@ const LayoutProfile = () => {
                             </NavLink>
                         </div>
                     </div>
-                    <NavLink to="/" className="flex items-center gap-2 itemMenuProfile">
+                    <NavLink to="/profile/vourcher" className="flex items-center gap-2 itemMenuProfile">
                         {/*----------------------------------Icon------------------------------*/}
                         <svg
                             width="18"
@@ -154,7 +147,7 @@ const LayoutProfile = () => {
 
                         <span>Lịch sử đơn hàng</span>
                     </NavLink>
-                    <NavLink to="/" className="flex items-center gap-2 itemMenuProfile">
+                    <NavLink to="/profile/noti" className="flex items-center gap-2 itemMenuProfile">
                         {/*----------------------------------Icon------------------------------*/}
                         <svg
                             width="16"
@@ -170,7 +163,7 @@ const LayoutProfile = () => {
                         </svg>
                         <span>Thông báo</span>
                     </NavLink>
-                    <NavLink to="/" className="flex items-center gap-2 itemMenuProfile">
+                    <NavLink to="/profile/accumulate-points" className="flex items-center gap-2 itemMenuProfile">
                         {/*----------------------------------Icon------------------------------*/}
                         <svg
                             width="18"

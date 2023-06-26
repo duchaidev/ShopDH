@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import IconStar from '../components/icon/IconStar';
-import IconHeart from '../components/icon/IconHeart';
+import IconStar from '../../components/icon/IconStar';
+import IconHeart from '../../components/icon/IconHeart';
 import { NavLink } from 'react-router-dom';
-import IconBootstrap from '../components/icon/IconBootstrap';
-import IconDown from '../components/header/IconDown';
-import IconTick from '../components/icon/IconTick';
-import ItemProduct from '../components/home/ItemProduct';
-import Popular from '../module/homePage/Popular';
+import IconBootstrap from '../../components/icon/IconBootstrap';
+import IconDown from '../../components/header/IconDown';
+import IconTick from '../../components/icon/IconTick';
+import ItemProduct from '../../components/home/ItemProduct';
+import Popular from '../../module/homePage/Popular';
 import axios from 'axios';
 
 

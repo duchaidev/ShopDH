@@ -8,10 +8,13 @@ import DropDown from "../../components/dropDown/DropDown";
 import { DropdownContext } from "../../context/dropdown-context";
 import DropdownInfo from "../../components/dropDown/DropdownInfo";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Tooltip } from "@mui/material";
 
 const Header = () => {
     const { toggle, value, setShow1 } = useContext(DropdownContext);
     const [show, setShow] = useState(false);
+    const { t } = useTranslation(["home"]);
     return (
         <div className="h-[120px] top-0 w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow bg-white z-50">
             <div className="flex justify-between w-full mt-3">
@@ -19,10 +22,10 @@ const Header = () => {
                     <div className="w-[500px] relative h-[40px] border rounded-full border-blue1 bg-blue2 pr-4 flex items-center">
                         <button className="flex relative items-center h-full gap-2 w-[135px] justify-between px-3 rounded-l-full bg-blue1 cursor-pointer" onClick={toggle}>
                             <input type="text" className="absolute left-0 w-full h-full bg-black rounded-l-full opacity-0 cursor-pointer" onBlur={() => { setShow1(false) }} />
-                            <span>{value || "All Items"}</span>
+                            <span>{value || t("SEARCH")}</span>
                             <IconDown></IconDown>
                         </button>
-                        <input type="text" placeholder="Search..." className="flex-grow h-full px-3 outline-none bg-blue2" />
+                        <input type="text" placeholder={`${t("SEARCH")}...`} className="flex-grow h-full px-3 outline-none bg-blue2" />
                         <IconSearch></IconSearch>
                         <DropDown width={"135px"}></DropDown>
                     </div>
@@ -33,12 +36,16 @@ const Header = () => {
                     <span className="text-base font-semibold">DevHouse</span>
                 </NavLink>
                 <div className="flex items-center justify-end flex-1 gap-10">
-                    <span className="font-bold">Free Download</span>
-                    <button className="px-4 py-3 text-white rounded-md bg-blue6">Trở thành người bán</button>
-                    <IconNoti></IconNoti>
+                    <span className="font-bold">{t("FREEDOWNLOAD")}</span>
+                    <button className="px-4 py-3 text-white rounded-md bg-blue6">{t("BECOMEASELLER")}</button>
+                    <Tooltip title="Thông báo">
+                        <span className="cursor-pointer">
+                            <IconNoti></IconNoti>
+                        </span>
+                    </Tooltip>
                     <div className="relative">
-                        <div className="relative flex items-center gap-4" onMouseDown={() => { setShow(!show) }}>
-                            <input type="text" className="absolute w-full h-full bg-black opacity-0 cursor-pointer" onBlur={() => { setShow(false) }} />
+                        <div className="relative flex items-center gap-4" >
+                            <input type="text" className="absolute w-full h-full bg-black opacity-0 cursor-pointer" onClick={() => { setShow(!show) }} onBlur={() => { setTimeout(() => { setShow(false) }, 100) }} />
                             <img src="/21011598.jpg" alt="" className="w-[25px] h-[25px] object-cover rounded-full" />
                             <IconDown></IconDown>
                             <DropdownInfo show={show}></DropdownInfo>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SlideHome from "../module/homePage/Slide";
-import TrendingCategories from "../module/homePage/TrendingCategories";
-import Slide2 from "../module/homePage/Slide2";
-import Blog from "../module/homePage/Blog";
-import Popular from "../module/homePage/Popular";
+import SlideHome from "../../module/homePage/Slide";
+import TrendingCategories from "../../module/homePage/TrendingCategories";
+import Slide2 from "../../module/homePage/Slide2";
+import Blog from "../../module/homePage/Blog";
+import Popular from "../../module/homePage/Popular";
 import axios from "axios";
 
 const HomePage = () => {

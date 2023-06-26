@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import Popular from '../module/homePage/Popular';
+import Popular from '../../module/homePage/Popular';
 import axios from 'axios';
 
 const CartPage = () => {
@@ -20,7 +20,7 @@ const CartPage = () => {
         fetchDataPopular();
     }, []);
     return (
-        <div>
+        <div className='mb-32'>
             {/*--------------------------------------Cart--------------------------------------*/}
             <div className='mt-[45px] px-[5%] grid grid-cols-10 gap-20'>
                 {/*--------------------------------------List Product--------------------------------------*/}

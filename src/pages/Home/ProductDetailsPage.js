@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import IconDown from '../components/header/IconDown';
-import IconDate from '../components/icon/IconDate';
-import IconSize from '../components/icon/IconSize';
-import IconRule from '../components/icon/IconRule';
-import IconLayer from '../components/icon/IconLayer';
-import CommentProduct from '../module/productDetails/CommentProduct';
-import MoreProduct from '../module/productDetails/MoreProduct';
+import IconDown from '../../components/header/IconDown';
+import IconDate from '../../components/icon/IconDate';
+import IconSize from '../../components/icon/IconSize';
+import IconRule from '../../components/icon/IconRule';
+import IconLayer from '../../components/icon/IconLayer';
+import CommentProduct from '../../module/productDetails/CommentProduct';
+import MoreProduct from '../../module/productDetails/MoreProduct';
 
 const ProductDetailsPage = () => {
     useEffect(() => {
