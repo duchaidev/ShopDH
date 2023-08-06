@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import ItemProduct from "../../components/home/ItemProduct";
 import IconHeartYellow from "../../components/icon/IconHeartYellow";
-
+import Rating from '@mui/material/Rating';
 const dataPopularCode = [
     {
         id: 1,
@@ -32,6 +32,8 @@ const dataPopularCode = [
         price: "140.000",
     },
 ];
+
+
 const CommentProduct = () => {
     const [isReview, setIsReview] = useState(true);
     const [isComment, setIsComment] = useState(false);
@@ -161,11 +163,12 @@ const CommentProduct = () => {
                         <div className="w-full mt-10">
                             <div className="font-bold text-[22px] border-blue1 flex items-center pt-8 pb-4 gap-4 border-b">
                                 <span>2 Reviews</span>
+                                <Rating name="size-large" defaultValue={2} size="large" />
+                                {/* <IconHeartYellow></IconHeartYellow>
                                 <IconHeartYellow></IconHeartYellow>
                                 <IconHeartYellow></IconHeartYellow>
                                 <IconHeartYellow></IconHeartYellow>
-                                <IconHeartYellow></IconHeartYellow>
-                                <IconHeartYellow></IconHeartYellow>
+                                <IconHeartYellow></IconHeartYellow> */}
                             </div>
                             <div className="flex items-center gap-4">
                                 <button className="px-3 py-2 transition-all border hover:text-blue7 hover:border-blue7 mt-7 border-blue1">
@@ -202,11 +205,12 @@ const CommentProduct = () => {
                                     <div>
                                         <span>Le Duc Hai</span>
                                         <div className="flex">
+                                            <Rating name="size-small" defaultValue={2} size="small" />
+                                            {/* <IconHeartYellow size="14"></IconHeartYellow>
                                             <IconHeartYellow size="14"></IconHeartYellow>
                                             <IconHeartYellow size="14"></IconHeartYellow>
                                             <IconHeartYellow size="14"></IconHeartYellow>
-                                            <IconHeartYellow size="14"></IconHeartYellow>
-                                            <IconHeartYellow size="14"></IconHeartYellow>
+                                            <IconHeartYellow size="14"></IconHeartYellow> */}
                                         </div>
                                     </div>
                                     <svg

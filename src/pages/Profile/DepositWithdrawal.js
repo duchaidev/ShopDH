@@ -8,7 +8,7 @@ const DepositWithdrawal = () => {
     return (
         <div className='flex flex-col gap-3 mb-32'>
             {/*--------------------------------------Chuyển khoản--------------------------------------*/}
-            <div className='flex flex-col bg-white '>
+            <div className='flex flex-col bg-white'>
                 <span className='p-5 font-semibold text-[18px] border-b border-blue1'>Nạp tiền qua ngân hàng - ATM - Ví điện tử</span>
                 {/*--------------------------------------Lưu ý--------------------------------------*/}
                 <div className='flex flex-col gap-3 p-5 border-b border-blue1'>

@@ -10,7 +10,7 @@ const CartPage = () => {
     useEffect(() => {
         const fetchDataPopular = async () => {
             try {
-                const popularResponse = await axios.get("http://localhost:3000/popularGraphics");
+                const popularResponse = await axios.get("http://localhost:3001/popularGraphics");
 
                 setPopular(popularResponse.data);
             } catch (err) {

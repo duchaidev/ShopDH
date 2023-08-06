@@ -77,14 +77,14 @@ const LayoutProfile = () => {
                             </svg>
                         </div>
                         <div
-                            className={`flex flex-col gap-1 mt-2 font-normal ml-7 text-gray2 transition-all ${showProfile
+                            className={`flex flex-col gap-1 font-normal ml-7 text-gray2 transition-all ${showProfile
                                 ? "dropdownShowMenuProfile"
                                 : "dropdownHiddenMenuProfile"
                                 } `}
                         >
                             <NavLink
-                                to="/my-profile"
-                                className="flex items-center gap-2 itemMenuProfile "
+                                to="/profile/my-profile"
+                                className="flex items-center gap-2 mt-2 itemMenuProfile"
                             >
                                 <p className="w-[6px] h-[6px] border rounded-full border-gray2"></p>
                                 <span>Hồ sơ</span>
