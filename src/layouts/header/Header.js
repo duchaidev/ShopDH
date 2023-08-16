@@ -10,6 +10,7 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@mui/material";
 import { useSelector } from "react-redux";
+import { convertBase64ToImage } from "../../until/componentHandle";
 
 const Header = () => {
   const [showDropDown, setShowDropDown] = useState(false);
@@ -85,7 +86,9 @@ const Header = () => {
                   }}
                 />
                 <img
-                  src={dataUser?.avatar || "/21011598.jpg"}
+                  src={
+                    convertBase64ToImage(dataUser?.avatar) || "/21011598.jpg"
+                  }
                   alt=""
                   className="w-[25px] h-[25px] object-cover rounded-full"
                 />

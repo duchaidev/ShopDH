@@ -27,10 +27,10 @@ export const apiRegister = async (user, dispatch, navigator) => {
 export const apiLogin = async (user, dispatch, navigator) => {
   dispatch(loginStart());
   try {
-    const res = await axios.post("http://localhost:8000/v1/auth/login", user);
-    // const res = await axios.post("http://localhost:8000/v1/auth/login", user, {
-    //   withCredentials: true,
-    // });
+    // const res = await axios.post("http://localhost:8000/v1/auth/login", user);
+    const res = await axios.post("http://localhost:8000/v1/auth/login", user, {
+      withCredentials: true,
+    });
     dispatch(loginSuccess(res.data));
     navigator("/");
   } catch (e) {
@@ -41,7 +41,6 @@ export const apiLogin = async (user, dispatch, navigator) => {
 
 export const apiEditUser = async (accessToken, newUser, dispatch, axiosJWT) => {
   dispatch(loginStart());
-  // console.log(accessToken);
   try {
     const res = await axiosJWT.put(
       "http://localhost:8000/v1/user/edit",

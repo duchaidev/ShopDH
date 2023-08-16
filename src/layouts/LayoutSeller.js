@@ -1,16 +1,22 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import NavBarLayoutSeller from "./layoutSeller/NavBarLayoutSeller";
+import NotiLayoutSeller from "./layoutSeller/NotiLayoutSeller";
+import Message from "./footer/Message";
 
 const LayoutSeller = () => {
   return (
-    <div className="bg-[#f6f6f6] w-full min-h-screen flex flex-col gap-5">
-      <div className="w-full h-[60px] bg-white shadow-sm px-[2%]">
-        <div className="flex items-center justify-between h-full">
+    <div className="bg-[#f6f6f6] w-full min-h-screen">
+      <Message></Message>
+      <div className="w-full fixed h-[60px] bg-white z-50 shadow-sm px-[2%] border-b border-blue6">
+        <div className="flex items-center justify-between h-full ">
           {/*------------------LOGO-------------------*/}
-          <div className="flex items-center h-full gap-2">
-            <img src="/logo.png" alt="" className="h-[42px]" />
-            <span className="text-lg font-semibold">DevHouse</span>
-          </div>
+          <NavLink to={"/seller"} className="">
+            <div className="flex items-center h-full gap-2">
+              <img src="/logo.png" alt="" className="h-[42px]" />
+              <span className="text-lg font-semibold">DevHouse</span>
+            </div>
+          </NavLink>
           <div className="flex items-center h-full gap-7">
             <NavLink to="/">
               <button className="px-4 py-2 text-sm font-semibold text-white rounded-sm bg-blue7">
@@ -72,11 +78,17 @@ const LayoutSeller = () => {
           </div>
         </div>
       </div>
-      <div className="flex">
-        <div className="w-[18%] h-[400px] bg-white"></div>
-        <div className="p-5">
+      <div className="flex w-full h-full pt-[60px]">
+        <NavBarLayoutSeller></NavBarLayoutSeller>
+        <div className="!w-[250px]"></div>
+        <div className="flex-1 p-4">
           <Outlet></Outlet>
         </div>
+        {/* <div className="p-4 w-[250px] h-full"> */}
+        <div className="mt-4 p-4 w-[280px] bg-white">
+          <NotiLayoutSeller></NotiLayoutSeller>
+        </div>
+        {/* </div> */}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -8,6 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { apiEditUser } from "../../apiRequest/apiRequestAuth";
 import { loginSuccess } from "../../redux/authSlice";
 import { createAxios } from "../../createInstance";
+import {
+  convertBase64ToImage,
+  formatISODateToInputDate,
+  toBase64,
+} from "../../until/componentHandle";
+import { toast } from "react-toastify";
 
 const MyProfilePage = () => {
   const StyledRadio = styled(Radio)`
@@ -18,31 +24,46 @@ const MyProfilePage = () => {
   `;
 
   const dispatch = useDispatch();
-
   const { dataUser, loading } = useSelector((state) => state.register.login);
-  let axiosJWT = createAxios(dataUser, dispatch, loginSuccess);
   const [handleInput, setHandleInput] = useState({
     editUsername: false,
     editPhone: false,
   });
-  // Format lại ngày sinh để hiển thị lên input
-  const formatISODateToInputDate = (isoDate) => {
-    if (!isoDate) return "";
-    const date = new Date(isoDate);
-    const year = date.getUTCFullYear();
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-    const day = date.getUTCDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-  const formattedBirthday = formatISODateToInputDate(dataUser?.birthday);
 
+  const formattedBirthday = formatISODateToInputDate(dataUser?.birthday);
+  console.log(formattedBirthday);
   const [valueInput, setValueInput] = useState({
     id: dataUser?.id,
     sex: dataUser?.sex || "",
     username: dataUser?.username || "",
     phone: dataUser?.phone || "",
     birthday: formattedBirthday || "",
+    avatar: "",
   });
+
+  useEffect(() => {
+    if (dataUser?.avatar) {
+      setValueInput({
+        ...valueInput,
+        avatar: convertBase64ToImage(dataUser?.avatar || ""),
+      });
+    }
+  }, []);
+
+  //Xử lí thay đổi ảnh đại diện
+  const imageChange = async (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      if (e.target.files[0].size <= 1024 * 1024) {
+        let fileImg = e.target.files[0];
+        setValueInput({
+          ...valueInput,
+          avatar: await toBase64(fileImg),
+        });
+      } else {
+        toast.error("Ảnh quá lớn, vui lòng chọn ảnh khác < 1MB");
+      }
+    }
+  };
 
   // Handle lấy value từ input
   const handleChange = (key, e) => {
@@ -61,14 +82,23 @@ const MyProfilePage = () => {
   };
 
   // Submit form
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (convertBase64ToImage(dataUser?.avatar || "") === valueInput.avatar) {
+      delete valueInput.avatar;
+    }
     if (
       valueInput.username !== dataUser?.username ||
       valueInput.phone !== dataUser?.phone ||
       valueInput.sex !== dataUser?.sex ||
-      valueInput.birthday !== formattedBirthday
+      valueInput.birthday !== formattedBirthday ||
+      valueInput.avatar !== convertBase64ToImage(dataUser?.avatar || "")
     ) {
-      apiEditUser(dataUser.accessToken, valueInput, dispatch, axiosJWT);
+      apiEditUser(
+        dataUser.accessToken,
+        valueInput,
+        dispatch,
+        createAxios(dataUser, dispatch, loginSuccess)
+      );
       setHandleInput({
         editUsername: false,
         editPhone: false,
@@ -145,9 +175,6 @@ const MyProfilePage = () => {
                 <span className="font-medium text-black">
                   leduchai2k3@gmail.com
                 </span>
-                {/* <button className="text-[11px] text-white font-semibold px-2 py-[6px] bg-blue6">
-                  Thay đổi
-                </button> */}
               </p>
               {dataUser?.phone && handleInput.editPhone === false ? (
                 <p className="flex items-center gap-3">
@@ -221,7 +248,8 @@ const MyProfilePage = () => {
                 valueInput.username !== dataUser?.username ||
                 valueInput.phone !== dataUser?.phone ||
                 valueInput.sex !== dataUser?.sex ||
-                valueInput.birthday !== formattedBirthday
+                valueInput.birthday !== formattedBirthday ||
+                valueInput.avatar !== convertBase64ToImage(dataUser?.avatar)
                   ? "bg-blue6 border-blue6 cursor-pointer hover:bg-blue7"
                   : "bg-blue7 border-blue7 cursor-no-drop"
               } m-auto flex items-center justify-center h-[44px] w-[110px] border-[2px] text-white font-semibold transition-all`}
@@ -238,23 +266,26 @@ const MyProfilePage = () => {
         <div className="flex flex-col items-center justify-center col-span-4 gap-6">
           <div className="border w-44 h-44 border-blue1">
             <img
-              src="https://images.unsplash.com/photo-1686836342891-6d1b01101f3d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80"
+              src={
+                valueInput?.avatar ||
+                convertBase64ToImage(dataUser?.avatar || "") ||
+                "/avatar-def.jpg"
+              }
               alt="avatar"
               className="object-cover w-full h-full"
             />
-            {/* <input
-              type="file"
-              onChange={(e) => {
-                console.log(e.target.files[0]);
-              }}
-            /> */}
           </div>
           <div className="flex flex-col gap-2">
-            <button className="py-3 px-6 font-semibold text-blue6 border-blue6 border-[2px]">
-              Chọn ảnh
+            <button className="py-3 px-6 font-semibold text-blue6 border-blue6 border-[2px] relative">
+              <span>Chọn ảnh</span>
+              <input
+                type="file"
+                onChange={imageChange}
+                className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+              />
             </button>
             <span className="text-[14px] text-gray1">
-              Dung lượng file tối đa 3mb <br /> Định dạng: .JPEG, .PNG
+              Dung lượng file tối đa 1mb <br /> Định dạng: .JPEG, .PNG
             </span>
           </div>
         </div>
