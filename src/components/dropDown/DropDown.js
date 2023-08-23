@@ -1,27 +1,39 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setValueDropdown } from "../../redux/dropdownSlide";
+import { apiGetCategories } from "../../apiRequest/apiRequestProduct";
+import { useQuery } from "react-query";
 
 const DropDown = ({ className, showDropDown }) => {
-  // const { setValue, dataButtonHead } = useContext(DropdownContext);
-  const { dataDropdown } = useSelector((state) => state?.dropdown);
+  const { data: category } = useQuery({
+    queryKey: ["apiGetCategories"],
+    queryFn: () => apiGetCategories(),
+  });
   const dispatch = useDispatch();
 
   return (
     <div
-      className={`absolute top-[40px] max-w-max flex bg-white flex-col border border-blue1 rounded-md dropdown-content ${className} ${
+      className={`absolute z-30 top-[40px] shadow-md max-w-max flex bg-white flex-col border border-blue1 rounded-md dropdown-content ${className} ${
         showDropDown ? "open" : ""
       }`}
     >
-      {dataDropdown?.map((item) => (
+      <span
+        className="px-5 py-2 cursor-pointer hover:bg-blue1"
+        onClick={() => {
+          dispatch(setValueDropdown("All items"));
+        }}
+      >
+        All items
+      </span>
+      {category?.categories?.map((item) => (
         <span
           className="px-5 py-2 cursor-pointer hover:bg-blue1"
           key={item.id}
           onMouseDown={() => {
-            dispatch(setValueDropdown(item.text));
+            dispatch(setValueDropdown(item.name));
           }}
         >
-          {item.text}
+          {item.name}
         </span>
       ))}
     </div>

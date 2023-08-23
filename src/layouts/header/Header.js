@@ -9,8 +9,10 @@ import DropdownInfo from "../../components/dropDown/DropdownInfo";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { convertBase64ToImage } from "../../until/componentHandle";
+import { useQuery } from "react-query";
+import { apiGetCategories } from "../../apiRequest/apiRequestProduct";
 
 const Header = () => {
   const [showDropDown, setShowDropDown] = useState(false);

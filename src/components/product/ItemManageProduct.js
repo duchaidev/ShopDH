@@ -2,21 +2,32 @@ import React, { useEffect, useState } from "react";
 import { Checkbox } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { convertBase64ToImage } from "../../until/componentHandle";
-import { apiDeleteProduct } from "../../apiRequest/apiRequestProduct";
+import {
+  apiDeleteProduct,
+  fetchProductSeller,
+} from "../../apiRequest/apiRequestProduct";
 import { NavLink } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useQuery } from "react-query";
 const ItemManageProduct = () => {
   const [checked, setChecked] = useState(false);
-  const { data } = useSelector((state) => state.product.getAllProductSeller);
+  // const { data } = useSelector((state) => state.product.getAllProductSeller);
+  const { id } = useSelector((state) => state.register.login.dataUser);
   const [fakeData, setFakeData] = useState();
   const dispatch = useDispatch();
   const handleChecked = (event) => {
     setChecked(event.target.checked);
   };
 
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = useQuery(["productSeller", id], () => fetchProductSeller(id));
+
   useEffect(() => {
-    setFakeData(data?.modifiedProducts);
-  }, [data]);
+    setFakeData(products?.modifiedProducts);
+  }, [products]);
 
   const handleDeleteProduct = (id) => {
     Swal.fire({

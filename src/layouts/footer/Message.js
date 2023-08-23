@@ -1,8 +1,106 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
+import {
+  convertBase64ToImage,
+  truncateText,
+} from "../../until/componentHandle";
+import { useSelector } from "react-redux";
 
+const socket = io("http://localhost:8000", {
+  transports: ["websocket", "polling", "flashsocket"],
+});
 const Message = () => {
+  const contentRef = useRef(null);
+  const { id } = useSelector((state) => state.register.login.dataUser);
   const [showChatMini, setShowChatMini] = useState(null);
   const [hiddenChat, setHiddenChat] = useState(false);
+
+  const [messages, setMessages] = useState([]);
+  const [messageInput, setMessageInput] = useState("");
+
+  const [usersChat, setUsersChat] = useState([]);
+  const [conversationId, setConversationId] = useState({
+    id: "",
+    receiverId: "",
+    name: "",
+    image: "",
+  });
+
+  const [search, setSearch] = useState({
+    value: "",
+    data: [],
+    isShow: false,
+  });
+
+  const handleSearch = (key, value) => {
+    setSearch({ ...search, [key]: value });
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/v1/chat/all-user", {
+        params: { value: search.value }, // Truyền valueSearch như một tham số
+      })
+      .then((response) => {
+        handleSearch("data", response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching messages:", error);
+      });
+    // socket.emit("joinChat", conversationId?.receiverId); // Người dùng tham gia cuộc trò chuyện
+  }, [search.value]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/v1/chat/conversation/${id}`)
+      .then((response) => {
+        setUsersChat([...response.data]);
+      })
+      .catch((error) => {
+        console.error("Error fetching messages:", error);
+      });
+  }, [id]);
+  useEffect(() => {
+    // Lấy danh sách tin nhắn từ API
+    axios
+      .get(`http://localhost:8000/v1/chat/${conversationId.id}}`)
+      .then((response) => {
+        setMessages(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching messages:", error);
+      });
+    // Lắng nghe tin nhắn từ máy chủ
+    socket.on("receiveMessage", (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, [conversationId]);
+  const handleSendMessage = () => {
+    if (messageInput.trim() !== "") {
+      const newMessage = {
+        content: messageInput,
+        senderId: id || "",
+        receiverId: conversationId?.receiverId,
+        name: "New Conversation",
+        conversationId: conversationId?.id || "",
+      };
+      // Gửi tin nhắn tới máy chủ
+      socket.emit("sendMessage", newMessage);
+
+      setMessageInput("");
+    }
+  };
+
+  useEffect(() => {
+    // Tự động cuộn xuống dưới cùng khi có tin nhắn mới
+    const contentElement = contentRef.current;
+    contentElement.scrollTop = contentElement.scrollHeight;
+  }, [messages]); // Khi danh sách tin nhắn thay đổi
+
   return (
     <div className="fixed z-50 bottom-0 right-[0.5%] ">
       {/* -------------------------------------button Chat Mini--------------------------------------- */}
@@ -129,7 +227,7 @@ const Message = () => {
               hiddenChat ? "" : "border-r border-blue1"
             } `}
           >
-            <div className="grid items-center w-full grid-cols-11 gap-1">
+            <div className="relative grid items-center w-full grid-cols-11 gap-1">
               <div className="relative col-span-7">
                 <svg
                   width="14"
@@ -148,6 +246,10 @@ const Message = () => {
                   type="text"
                   className="max-w-full py-1 pr-2 text-xs transition-all border outline-none pl-7 border-blue1 focus:border-blue6"
                   placeholder="Tìm kiếm"
+                  value={search.value}
+                  onFocus={() => handleSearch("isShow", true)}
+                  onBlur={() => handleSearch("isShow", false)}
+                  onChange={(e) => handleSearch("value", e.target.value)}
                 />
               </div>
               <div className="flex items-center justify-center col-span-4 gap-1 cursor-pointer">
@@ -165,13 +267,170 @@ const Message = () => {
                   />
                 </svg>
               </div>
+              {search.isShow === true && search?.data?.length > 0 && (
+                <div className="absolute flex flex-col gap-2 w-full shadow-sm border border-blue1 bg-blue2 top-[110%] p-1">
+                  {search?.data &&
+                    search?.data?.map((item) => (
+                      <div
+                        key={item.id}
+                        onMouseDown={() => {
+                          setUsersChat([...usersChat, item]);
+                        }}
+                        className="flex items-center gap-2 p-1 transition-all cursor-pointer hover:bg-blue1"
+                      >
+                        <img
+                          src={
+                            convertBase64ToImage(item?.avatar) ||
+                            "/21011598.jpg"
+                          }
+                          alt=""
+                          className="w-[22px] h-[22px] rounded-full object-cover"
+                        />
+                        <span className="text-sm">
+                          {truncateText(
+                            item?.username ||
+                              `${item?.firstName} ${item?.lastName} (${
+                                item?.username ? "username" : "name"
+                              })`,
+                            20
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+            <div className="mt-2">
+              {usersChat?.length > 0 &&
+                usersChat?.map((item, index) => {
+                  return (
+                    <div
+                      className="flex items-center justify-center w-full mt-4 cursor-pointer"
+                      key={index}
+                      onClick={() => {
+                        // console.log(item);
+                        setConversationId({
+                          id: item?.id || "",
+                          receiverId: !(item?.conversations?.id === id)
+                            ? item?.conversations?.id || item?.id
+                            : item?.secondUser?.id,
+                          name: !(item?.conversations?.id === id)
+                            ? item?.conversations?.username ||
+                              `${
+                                item?.conversations?.firstName ||
+                                item?.firstName
+                              } ${
+                                item?.conversations?.lastName || item?.lastName
+                              }`
+                            : item?.secondUser?.username ||
+                              `${item?.secondUser?.firstName} ${item?.secondUser?.lastName}`,
+                          image: !(item?.conversations?.id === id)
+                            ? convertBase64ToImage(
+                                item?.conversations?.avatar || item?.avatar
+                              ) || "/21011598.jpg"
+                            : convertBase64ToImage(item?.secondUser?.avatar) ||
+                              "/21011598.jpg",
+                        });
+                      }}
+                    >
+                      <img
+                        src={
+                          !(item?.conversations?.id === id)
+                            ? convertBase64ToImage(
+                                item?.conversations?.avatar || item?.avatar
+                              ) || "/21011598.jpg"
+                            : convertBase64ToImage(item?.secondUser?.avatar) ||
+                              "/21011598.jpg"
+                        }
+                        alt=""
+                        className="w-[34px] h-[34px] rounded-full object-cover"
+                      />
+                      <div className="flex flex-col w-full mr-2">
+                        <p className="flex justify-between w-full">
+                          <span className="ml-2 text-sm font-semibold">
+                            {truncateText(
+                              !(item?.conversations?.id === id)
+                                ? item?.conversations?.username ||
+                                    `${
+                                      item?.conversations?.firstName ||
+                                      item?.firstName
+                                    } ${
+                                      item?.conversations?.lastName ||
+                                      item?.lastName
+                                    }`
+                                : item?.secondUser?.username ||
+                                    `${item?.secondUser?.firstName} ${item?.secondUser?.lastName}`,
+                              20
+                            )}
+                          </span>
+                          <span className="text-sm text-gray1">25/5</span>
+                        </p>
+                        <span className="ml-2 text-sm">
+                          {/* {truncateText(
+                            messages[messages?.length - 1]?.content,
+                            20
+                          )} */}
+                          test
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
-          <div className={`col-span-2 pt-1 pl-2 ${hiddenChat ? "hidden" : ""}`}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
-            repellat harum delectus unde quas autem ipsam iusto totam animi
-            perferendis quaerat quam voluptate aliquid tempora soluta, commodi
-            dicta repudiandae sint?
+          <div
+            className={`col-span-2 flex flex-col justify-between h-[100%] ${
+              hiddenChat ? "hidden" : ""
+            } ${conversationId?.name ? "" : "opacity-0"}`}
+          >
+            <div className="h-[42px] border-blue1 border-b flex items-center pl-3">
+              {conversationId.name}
+            </div>
+            <div
+              className="max-h-[326px] px-2 flex flex-col gap-3 w-full py-3 flex-1 overflow-auto"
+              ref={contentRef}
+            >
+              {messages?.length > 0 &&
+                messages?.map((item, index) => (
+                  <div className={`max-w-[100%]`} key={index}>
+                    <span
+                      className={`${
+                        item?.senderId === id
+                          ? "float-right bg-blue5 text-white"
+                          : " float-left bg-grayEC"
+                      }  max-w-[70%] px-3 text-[15px] py-[6px] rounded-xl`}
+                    >
+                      {item?.content}
+                    </span>
+                  </div>
+                ))}
+            </div>
+            <div className="h-[130px] pb-2 flex flex-col border-t border-blue1">
+              <input
+                type="text"
+                placeholder="Enter your message"
+                className="w-full p-2 text-[15px] outline-none"
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+              />
+              <div className="flex items-center justify-between px-2 mt-4">
+                <span className="text-xs">List Icon, Img, ...</span>
+                <button className="" onClick={handleSendMessage}>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="gray"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`transition-all ${
+                      messageInput ? "fill-blue6" : ""
+                    } `}
+                  >
+                    <path d="M15.1564 7.44369L1.40636 0.568693C1.29859 0.514797 1.17754 0.493202 1.05778 0.506509C0.938028 0.519815 0.82467 0.567455 0.731361 0.643693C0.642251 0.718376 0.57574 0.816434 0.539304 0.926845C0.502869 1.03726 0.497953 1.15564 0.525111 1.26869L2.18136 7.37494H9.25011V8.62494H2.18136L0.500111 14.7124C0.474627 14.8069 0.471653 14.9059 0.491426 15.0017C0.511199 15.0975 0.553169 15.1873 0.61396 15.2639C0.674751 15.3404 0.752668 15.4017 0.841444 15.4427C0.930221 15.4837 1.02738 15.5033 1.12511 15.4999C1.22295 15.4994 1.31928 15.4758 1.40636 15.4312L15.1564 8.55619C15.2587 8.50374 15.3447 8.42406 15.4046 8.32591C15.4646 8.22777 15.4964 8.11497 15.4964 7.99994C15.4964 7.88491 15.4646 7.77212 15.4046 7.67397C15.3447 7.57583 15.2587 7.49614 15.1564 7.44369Z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -179,4 +438,4 @@ const Message = () => {
   );
 };
 
-export default Message;
+export default React.memo(Message);

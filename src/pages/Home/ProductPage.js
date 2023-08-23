@@ -7,6 +7,9 @@ import IconDown from "../../components/header/IconDown";
 import IconTick from "../../components/icon/IconTick";
 import ItemProduct from "../../components/home/ItemProduct";
 import Popular from "../../module/homePage/Popular";
+import { fetchProductWithCategory } from "../../apiRequest/apiRequestProduct";
+import { useInfiniteQuery, useQuery } from "react-query";
+import { convertBase64ToImage } from "../../until/componentHandle";
 import axios from "axios";
 
 const ProductPage = () => {
@@ -15,6 +18,7 @@ const ProductPage = () => {
   const [valueFilterDropDown, setValueFilterDropDown] = useState("");
   const [showFilters, setShowFilters] = useState(true);
   const [popular, setPopular] = useState([]);
+  const [page, setPage] = useState(1);
 
   //-------------------------------------------Scroll leend đầu trang lần đầu tiên------------------------------------------
   useEffect(() => {
@@ -23,15 +27,20 @@ const ProductPage = () => {
   }, []);
 
   //-------------------------------------------Fetch Data------------------------------------------
-  useEffect(() => {
-    async function fetchData() {
-      const popularRes = await axios.get(
-        "http://localhost:3001/popularGraphics"
-      );
-      setPopular(popularRes.data);
-    }
-    fetchData();
-  }, []);
+
+  const {
+    data: productPopular,
+    isLoading,
+    isError,
+    error,
+    isFetching,
+    isPreviousData,
+  } = useQuery({
+    queryKey: ["productPopularWithCategory", page, 1],
+    queryFn: () => fetchProductWithCategory(page, 1),
+    keepPreviousData: true,
+  });
+
   const handleShowFilter = () => {
     setShowFilters(!showFilters);
   };
@@ -362,20 +371,26 @@ const ProductPage = () => {
               showFilters ? "grid-cols-4" : "grid-cols-5"
             }`}
           >
-            {popular.map((item, index) => (
+            {/* {productPopular?.modifiedProducts.map((item, index) => (
               <ItemProduct
-                key={item.id}
-                image={item.imageProduct}
-                slugProduct={`/product-details/${item.slug}`}
-                title={item.title}
-                author={item.author}
-                slugAuthor={item.slugAuthor}
-                price={item.price}
+                key={item?.id}
+                image={convertBase64ToImage(item?.imageMain[0] || "")}
+                slugProduct={`/product-details/${item?.slug}`}
+                title={item?.title}
+                author={
+                  item?.user?.username ||
+                  item?.user?.firstName + item?.user?.lastName
+                }
+                slugAuthor={item?.slugAuthor}
+                price={item?.price}
               ></ItemProduct>
-            ))}
+            ))} */}
           </div>
           <div className="w-full mt-6 flexCustom">
-            <button className="w-[320px] h-[40px] flexCustom border border-blue1 rounded-lg gap-4 hover:bg-blue1 transition-all">
+            <button
+              className="w-[320px] h-[40px] flexCustom border border-blue1 rounded-lg gap-4 hover:bg-blue1 transition-all"
+              onClick={() => setPage(page + 1)}
+            >
               <span>Xem thêm 20 sản phẩm</span>
               <svg
                 width="10"
@@ -390,14 +405,14 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
-      <div className="pt-10">
+      {/* <div className="pt-10">
         <Popular
           title="Popular Graphics123"
           explore="Explore Graphics"
           dataPopular={popular}
           url="/product"
         ></Popular>
-      </div>
+      </div> */}
     </div>
   );
 };

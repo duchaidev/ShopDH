@@ -1,14 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import {
-  addError,
-  addStart,
-  addSuccess,
-  getProductSellerError,
-  getProductSellerStart,
-  getProductSellerSuccess,
-} from "../redux/productSlide";
-import { redirect } from "react-router-dom";
+import { addError, addStart, addSuccess } from "../redux/productSlide";
+import { listDropdown } from "../redux/dropdownSlide";
 
 export const apiAddProduct = async (dataProduct, dispatch) => {
   dispatch(addStart());
@@ -20,27 +13,40 @@ export const apiAddProduct = async (dataProduct, dispatch) => {
         withCredentials: true,
       }
     );
-    dispatch(addSuccess(res.data));
+    await dispatch(addSuccess(res.data));
   } catch (e) {
-    dispatch(addError());
-    toast.error("Thêm sản phẩm thất bại");
+    await dispatch(addError());
   }
 };
 
-export const apiGetAllProductSeller = async (userId, dispatch) => {
-  dispatch(getProductSellerStart());
-  try {
-    const res = await axios.get(
-      `http://localhost:8000/v1/product/user/${userId}`,
-      {
-        withCredentials: true,
-      }
-    );
-    await dispatch(getProductSellerSuccess(res.data));
-  } catch (e) {
-    await dispatch(getProductSellerError());
-    toast.error("Lấy sản phẩm thất bại");
-  }
+// Định nghĩa hàm fetch dữ liệu
+export const fetchProductSeller = async (userId) => {
+  const res = await axios.get(
+    `http://localhost:8000/v1/product/user/${userId}`,
+    {
+      withCredentials: true,
+    }
+  );
+  return res.data;
+};
+
+export const fetchProductPopular = async (category) => {
+  const res = await axios.get(
+    `http://localhost:8000/v1/product/popular/${category}`,
+    {
+      withCredentials: true,
+    }
+  );
+  return res.data;
+};
+export const fetchProductWithCategory = async (page, limit = 1) => {
+  const res = await axios.get(
+    `http://localhost:8000/v1/product/category?page=${page}&limit=${limit}`,
+    {
+      withCredentials: true,
+    }
+  );
+  return res.data;
 };
 
 export const apiDeleteProduct = async (id, dispatch) => {
@@ -70,10 +76,25 @@ export const apiEditProduct = async (dataProduct, dispatch) => {
 };
 
 export const apiGetOneProduct = async (id) => {
+  console.log(id);
   try {
     const res = await axios.get(`http://localhost:8000/v1/product/${id}`, {
       withCredentials: true,
     });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const apiGetCategories = async (dispatch) => {
+  try {
+    const res = await axios.get(
+      `http://localhost:8000/v1/product/getcategory`,
+      {
+        withCredentials: true,
+      }
+    );
     return res.data;
   } catch (error) {
     throw error;

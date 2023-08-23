@@ -31,7 +31,7 @@ const SlideHome = () => {
         <span className="text-[70px] font-bold text-center leading-[100px]">
           Bring your creative ideas to life.
         </span>
-        <div className="w-[670px] h-[68px] rounded-lg flex items-center pl-6 bg-blue2 mt-[40px]">
+        <div className="w-[670px] relative h-[68px] rounded-lg flex items-center pl-6 bg-blue2 mt-[40px]">
           <IconSearch></IconSearch>
           <input
             type="text"
@@ -39,19 +39,26 @@ const SlideHome = () => {
             placeholder="Search millions of photos, fonts, graphics, and more, ..."
           />
           <button
-            className="relative w-[130px] flex gap-3 px-5 border-l border-blue1 items-center h-[30px] cursor-pointer"
+            className="relative w-auto flex gap-3 px-5 border-l border-blue1 items-center h-[30px] cursor-pointer"
             onClick={() => {
               setShowDropDown(!showDropDown);
             }}
           >
+            <input
+              type="text"
+              className="absolute left-0 w-full h-full bg-black rounded-l-full opacity-0 cursor-pointer"
+              onBlur={() => {
+                setShowDropDown(false);
+              }}
+            />
             <span className="text-gray1">{valueDropdown || "All items"}</span>
             <IconDown></IconDown>
-            <DropDown
-              width={"135px"}
-              className="top-[43px]"
-              showDropDown={showDropDown}
-            ></DropDown>
           </button>
+          <DropDown
+            width={"auto"}
+            className="!top-[65px] right-0"
+            showDropDown={showDropDown}
+          ></DropDown>
         </div>
         <div className="mt-[25px] flex gap-4 transition-all">
           {data.map((items, index) => (

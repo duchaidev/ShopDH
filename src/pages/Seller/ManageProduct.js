@@ -2,25 +2,25 @@ import React, { useEffect, useState } from "react";
 import AllProduct from "./../../module/manageProduct/AllProduct";
 import ItemManageProduct from "../../components/product/ItemManageProduct";
 import { useDispatch, useSelector } from "react-redux";
-import { apiGetAllProductSeller } from "../../apiRequest/apiRequestProduct";
+import {
+  apiGetAllProductSeller,
+  fetchProductSeller,
+} from "../../apiRequest/apiRequestProduct";
 import { toast } from "react-toastify";
+import { useQuery } from "react-query";
 
 const classNameHeader =
   "py-5 text-center  border-b-[2px] cursor-pointer transition-all";
 const ManageProduct = () => {
   const [isShow, setIsShow] = useState(0);
   const { id } = useSelector((state) => state.register.login.dataUser);
-  const { loading } = useSelector((state) => state.product.getAllProductSeller);
-  const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.product.getAllProductSeller);
   const handleSetShow = (index) => {
     setIsShow(index);
   };
-  useEffect(() => {
-    if (!data) {
-      apiGetAllProductSeller(id, dispatch);
-    }
-  }, [data, id]);
+
+  const { data: products } = useQuery(["productSeller", id], () =>
+    fetchProductSeller(id)
+  );
   return (
     <div>
       <div className="p-5 pb-8 bg-white">
@@ -118,7 +118,7 @@ const ManageProduct = () => {
         </div>
         {/*============================ View Product ============================*/}
         <div className="px-6 py-4">
-          <AllProduct quantityProduct={data?.modifiedProducts?.length}>
+          <AllProduct quantityProduct={products?.modifiedProducts?.length}>
             <ItemManageProduct></ItemManageProduct>
           </AllProduct>
         </div>

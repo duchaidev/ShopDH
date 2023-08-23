@@ -9,17 +9,24 @@ import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+// Tạo một instance của QueryClient
+const queryClient = new QueryClient();
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <BrowserRouter>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-      <ToastContainer></ToastContainer>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+          <ReactQueryDevtools />
+        </PersistGate>
+        <ToastContainer></ToastContainer>
+      </BrowserRouter>
+    </QueryClientProvider>
   </Provider>
   // </React.StrictMode>
 );

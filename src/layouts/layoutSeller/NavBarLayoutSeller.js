@@ -89,7 +89,11 @@ const NavBarLayoutSeller = () => {
           <NavLink to={"add-product"} className="itemMenuProfile">
             <li className="cursor-pointer">Thêm sản phẩm</li>
           </NavLink>
-          <li className="cursor-pointer">Sản phẩm vi phạm</li>
+          <NavLink to={"add-category"} className="itemMenuProfile">
+            <li className="cursor-pointer">
+              Sản phẩm vi phạm/ Tesst Add category
+            </li>
+          </NavLink>
         </ul>
       </div>
 

@@ -221,3 +221,14 @@ visibility: hidden;
   animation:s3 1s infinite linear;
 }
 @keyframes s3 {to{transform: rotate(1turn)}}
+
+.html-content {
+  ul, li {
+    /* Để các thuộc tính cơ bản nguyên trạng */
+    list-style: initial;
+    margin: initial;
+    padding: initial;
+    /* Định nghĩa các style cụ thể cho các thẻ HTML */
+    /* ... */
+  }
+}

@@ -31,7 +31,7 @@ const MyProfilePage = () => {
   });
 
   const formattedBirthday = formatISODateToInputDate(dataUser?.birthday);
-  console.log(formattedBirthday);
+  // console.log(formattedBirthday);
   const [valueInput, setValueInput] = useState({
     id: dataUser?.id,
     sex: dataUser?.sex || "",

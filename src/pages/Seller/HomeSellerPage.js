@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { apiGetAllProductSeller } from "../../apiRequest/apiRequestProduct";
+import { fetchProductSeller } from "../../apiRequest/apiRequestProduct";
+import { useQuery, useQueryClient } from "react-query";
 
 const HomeSellerPage = () => {
+  const queryClient = useQueryClient();
   const { id } = useSelector((state) => state.register.login.dataUser);
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    apiGetAllProductSeller(id, dispatch);
+    queryClient.prefetchQuery(["productSeller", id], () =>
+      fetchProductSeller(id)
+    );
   }, []);
 
   return (
@@ -140,4 +142,4 @@ const ItemMarketing = ({ data, category, border, url }) => {
     </NavLink>
   );
 };
-export default HomeSellerPage;
+export default React.memo(HomeSellerPage);

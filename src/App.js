@@ -46,6 +46,7 @@ const AddProductSellerPage = React.lazy(() =>
   import("./pages/Seller/AddProductSellerPage")
 );
 const ManageProduct = React.lazy(() => import("./pages/Seller/ManageProduct"));
+const AddCategory = React.lazy(() => import("./pages/Seller/AddCategory"));
 
 const App = () => {
   return (
@@ -139,6 +140,10 @@ const App = () => {
             <Route
               path="product"
               element={<ManageProduct></ManageProduct>}
+            ></Route>
+            <Route
+              path="add-category"
+              element={<AddCategory></AddCategory>}
             ></Route>
           </Route>
         </Routes>
