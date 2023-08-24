@@ -6,6 +6,11 @@ import {
   truncateText,
 } from "../../until/componentHandle";
 import { useSelector } from "react-redux";
+import { useQuery } from "react-query";
+import {
+  apiGetMessage,
+  getUserConversation,
+} from "../../apiRequest/apiRequestChat";
 
 const socket = io("http://localhost:8000", {
   transports: ["websocket", "polling", "flashsocket"],
@@ -18,25 +23,44 @@ const Message = () => {
 
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
-
   const [usersChat, setUsersChat] = useState([]);
   const [conversationId, setConversationId] = useState({
     id: "",
     receiverId: "",
     name: "",
     image: "",
+    // temp_room: Date.now(),
   });
-
+  // console.log(messages);
   const [search, setSearch] = useState({
     value: "",
     data: [],
     isShow: false,
   });
-
+  const { data: msgListConversation, refetch: refetchListConversation } =
+    useQuery(
+      ["message", conversationId?.id],
+      () => apiGetMessage(conversationId.id),
+      {
+        enabled: false, // Không tự động chạy truy vấn khi mount
+      }
+    );
   const handleSearch = (key, value) => {
     setSearch({ ...search, [key]: value });
   };
 
+  //kết nối socket
+  useEffect(() => {
+    // Khi người dùng kết nối hoặc đăng nhập
+    socket.emit("userConnected", id, socket.id);
+
+    return () => {
+      // Khi component unmount hoặc userDisconnected (nếu cần)
+      socket.emit("userDisconnected", id); // Tùy theo yêu cầu của bạn
+    };
+  }, [id]);
+
+  // Lấy danh sách người dùng từ API
   useEffect(() => {
     axios
       .get("http://localhost:8000/v1/chat/all-user", {
@@ -51,35 +75,66 @@ const Message = () => {
     // socket.emit("joinChat", conversationId?.receiverId); // Người dùng tham gia cuộc trò chuyện
   }, [search.value]);
 
+  // Lấy danh sách người dùng có tin nhắn từ API
   useEffect(() => {
-    axios
-      .get(`http://localhost:8000/v1/chat/conversation/${id}`)
-      .then((response) => {
-        setUsersChat([...response.data]);
-      })
-      .catch((error) => {
-        console.error("Error fetching messages:", error);
-      });
+    const fetchData = async () => {
+      const data = await getUserConversation(id);
+      setUsersChat([...data]);
+    };
+    fetchData();
   }, [id]);
+
   useEffect(() => {
+    setMessages(msgListConversation);
+    refetchListConversation();
+    if (!conversationId.id) {
+    }
+    // const { data: detailProduct } = useQuery(
+    //   ["message", conversationId.id],
+    //   () => apiGetMessage(conversationId.id)
+    // );
     // Lấy danh sách tin nhắn từ API
-    axios
-      .get(`http://localhost:8000/v1/chat/${conversationId.id}}`)
-      .then((response) => {
-        setMessages(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching messages:", error);
-      });
+    // axios
+    //   .get(`http://localhost:8000/v1/chat/${conversationId.id}}`)
+    //   .then((response) => {
+    //     setMessages(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching messages:", error);
+    //   });
+
     // Lắng nghe tin nhắn từ máy chủ
     socket.on("receiveMessage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      // Nếu tin nhắn là từ người mới, cập nhật danh sách người dùng
+      if (
+        !usersChat.find(
+          (user) =>
+            user.conversations.id === message?.senderId ||
+            user.secondUser.id === message?.senderId
+        )
+      ) {
+        axios
+          .get(`http://localhost:8000/v1/chat/conversation/${id}`)
+          .then((response) => {
+            setUsersChat([...response.data]);
+          })
+          .catch((error) => {
+            console.error("Error fetching messages:", error);
+          });
+      }
+      // console.log(usersChat);
+      if (message?.conversationId === conversationId?.id) {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      } else {
+        return;
+      }
     });
     return () => {
       socket.off("receiveMessage");
     };
-  }, [conversationId]);
-  const handleSendMessage = () => {
+  }, [conversationId, msgListConversation]);
+
+  const handleSendMessage = async () => {
     if (messageInput.trim() !== "") {
       const newMessage = {
         content: messageInput,
@@ -87,10 +142,43 @@ const Message = () => {
         receiverId: conversationId?.receiverId,
         name: "New Conversation",
         conversationId: conversationId?.id || "",
+        // tempRoom: conversationId?.temp_room,
       };
+
       // Gửi tin nhắn tới máy chủ
       socket.emit("sendMessage", newMessage);
 
+      setMessages((prevMessages) => {
+        // Nếu prevMessages chưa được khởi tạo hoặc là null/undefined, khởi tạo là một mảng rỗng
+        if (!prevMessages) {
+          return [newMessage];
+        } else {
+          return [...prevMessages, newMessage];
+        }
+        // Thêm message mới vào mảng
+      });
+      // Nếu không có conversationId, cập nhật danh sách usersChat ngay khi có tin nhắn mới
+      // if (!conversationId.id) {
+      //   setUsersChat((prevUsers) => {
+      //     // Kiểm tra xem người gửi có trong danh sách không
+      //     if (
+      //       !prevUsers.find(
+      //         (user) =>
+      //           user.conversations.id === newMessage.senderId ||
+      //           user.secondUser.id === newMessage.senderId
+      //       )
+      //     ) {
+      //       return [
+      //         ...prevUsers,
+      //         {
+      //           id: newMessage.senderId,
+      //           // ... thêm các thuộc tính khác của người gửi
+      //         },
+      //       ];
+      //     }
+      //     return prevUsers;
+      //   });
+      // }
       setMessageInput("");
     }
   };
@@ -310,7 +398,8 @@ const Message = () => {
                       onClick={() => {
                         // console.log(item);
                         setConversationId({
-                          id: item?.id || "",
+                          ...conversationId,
+                          id: item?.conversations ? item?.id : "",
                           receiverId: !(item?.conversations?.id === id)
                             ? item?.conversations?.id || item?.id
                             : item?.secondUser?.id,
@@ -405,7 +494,7 @@ const Message = () => {
                   </div>
                 ))}
             </div>
-            <div className="h-[130px] pb-2 flex flex-col border-t border-blue1">
+            <div className="h-[130px] pb-2 flex pl-[2px] flex-col border-t border-blue1">
               <input
                 type="text"
                 placeholder="Enter your message"

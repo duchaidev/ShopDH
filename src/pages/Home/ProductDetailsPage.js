@@ -36,9 +36,8 @@ const ProductDetailsPage = () => {
   //   // window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
   // }, []);
 
-  const { data: detailProduct, isLoading } = useQuery(
-    ["detailProduct", slug],
-    () => apiGetOneProduct(slug)
+  const { data: detailProduct } = useQuery(["detailProduct", slug], () =>
+    apiGetOneProduct(slug)
   );
   // console.log("detailProduct: ", detailProduct);
   const listImg = [
