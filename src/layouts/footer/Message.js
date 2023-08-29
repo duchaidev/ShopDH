@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import {
   convertBase64ToImage,
+  formatDateAndDay,
+  formatOfflineDuration,
   truncateText,
 } from "../../until/componentHandle";
 import { useSelector } from "react-redux";
@@ -21,7 +23,9 @@ const Message = () => {
   const [showChatMini, setShowChatMini] = useState(null);
   const [hiddenChat, setHiddenChat] = useState(false);
 
+  const [activeMessage, setActiveMessage] = useState(null);
   const [messages, setMessages] = useState([]);
+  const focusInput = useRef(null);
   const [messageInput, setMessageInput] = useState("");
   const [usersChat, setUsersChat] = useState([]);
   const [conversationId, setConversationId] = useState({
@@ -29,22 +33,31 @@ const Message = () => {
     receiverId: "",
     name: "",
     image: "",
-    // temp_room: Date.now(),
   });
-  // console.log(messages);
+  console.log(usersChat);
   const [search, setSearch] = useState({
     value: "",
     data: [],
     isShow: false,
   });
-  const { data: msgListConversation, refetch: refetchListConversation } =
-    useQuery(
-      ["message", conversationId?.id],
-      () => apiGetMessage(conversationId.id),
-      {
-        enabled: false, // Không tự động chạy truy vấn khi mount
-      }
-    );
+  const {
+    data: messageConversation,
+    refetch: refetchMsgConversation,
+    isLoading: loadingConversation,
+  } = useQuery(
+    ["message", conversationId?.id],
+    () =>
+      conversationId?.id
+        ? apiGetMessage(conversationId.id)
+        : Promise.resolve([]),
+    {
+      enabled: false, // Không tự động chạy truy vấn khi mount
+    }
+  );
+  const fetchData = async () => {
+    const data = await getUserConversation(id);
+    setUsersChat([...data]);
+  };
   const handleSearch = (key, value) => {
     setSearch({ ...search, [key]: value });
   };
@@ -54,9 +67,19 @@ const Message = () => {
     // Khi người dùng kết nối hoặc đăng nhập
     socket.emit("userConnected", id, socket.id);
 
+    const handleBeforeUnload = (event) => {
+      // Thực hiện tác vụ ngắt kết nối khi người dùng đóng trình duyệt
+      socket.emit("userDisconnected", id, socket.id);
+
+      // Thông báo xác nhận rời đi cho một số trình duyệt
+      event.preventDefault();
+      event.returnValue = ""; // Không có thông báo xác nhận mặc định trên một số trình duyệt
+    };
+
+    // Đăng ký sự kiện beforeunload
+    window.addEventListener("unload", handleBeforeUnload);
     return () => {
-      // Khi component unmount hoặc userDisconnected (nếu cần)
-      socket.emit("userDisconnected", id); // Tùy theo yêu cầu của bạn
+      socket.emit("userDisconnected", id, socket.id); // Tùy theo yêu cầu của bạn
     };
   }, [id]);
 
@@ -77,31 +100,12 @@ const Message = () => {
 
   // Lấy danh sách người dùng có tin nhắn từ API
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getUserConversation(id);
-      setUsersChat([...data]);
-    };
     fetchData();
   }, [id]);
 
   useEffect(() => {
-    setMessages(msgListConversation);
-    refetchListConversation();
-    if (!conversationId.id) {
-    }
-    // const { data: detailProduct } = useQuery(
-    //   ["message", conversationId.id],
-    //   () => apiGetMessage(conversationId.id)
-    // );
-    // Lấy danh sách tin nhắn từ API
-    // axios
-    //   .get(`http://localhost:8000/v1/chat/${conversationId.id}}`)
-    //   .then((response) => {
-    //     setMessages(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching messages:", error);
-    //   });
+    refetchMsgConversation();
+    setMessages(messageConversation);
 
     // Lắng nghe tin nhắn từ máy chủ
     socket.on("receiveMessage", (message) => {
@@ -109,8 +113,8 @@ const Message = () => {
       if (
         !usersChat.find(
           (user) =>
-            user.conversations.id === message?.senderId ||
-            user.secondUser.id === message?.senderId
+            user?.conversations?.conversationId === message?.senderId ||
+            user?.secondUser?.conversationId === message?.senderId
         )
       ) {
         axios
@@ -132,7 +136,7 @@ const Message = () => {
     return () => {
       socket.off("receiveMessage");
     };
-  }, [conversationId, msgListConversation]);
+  }, [conversationId, messageConversation]);
 
   const handleSendMessage = async () => {
     if (messageInput.trim() !== "") {
@@ -142,7 +146,6 @@ const Message = () => {
         receiverId: conversationId?.receiverId,
         name: "New Conversation",
         conversationId: conversationId?.id || "",
-        // tempRoom: conversationId?.temp_room,
       };
 
       // Gửi tin nhắn tới máy chủ
@@ -157,28 +160,16 @@ const Message = () => {
         }
         // Thêm message mới vào mảng
       });
-      // Nếu không có conversationId, cập nhật danh sách usersChat ngay khi có tin nhắn mới
-      // if (!conversationId.id) {
-      //   setUsersChat((prevUsers) => {
-      //     // Kiểm tra xem người gửi có trong danh sách không
-      //     if (
-      //       !prevUsers.find(
-      //         (user) =>
-      //           user.conversations.id === newMessage.senderId ||
-      //           user.secondUser.id === newMessage.senderId
-      //       )
-      //     ) {
-      //       return [
-      //         ...prevUsers,
-      //         {
-      //           id: newMessage.senderId,
-      //           // ... thêm các thuộc tính khác của người gửi
-      //         },
-      //       ];
-      //     }
-      //     return prevUsers;
-      //   });
-      // }
+      setUsersChat((prevUserChat) => {
+        prevUserChat.map((item) => {
+          if (parseInt(item?.id) === parseInt(conversationId?.id)) {
+            item.messagesAlias[0].content = messageInput;
+            console.log(item.messagesAlias[0].content);
+          }
+          return item;
+        });
+        return [...prevUserChat];
+      });
       setMessageInput("");
     }
   };
@@ -308,14 +299,14 @@ const Message = () => {
         <div
           className={`grid h-full ${
             hiddenChat ? "grid-cols-1" : "grid-cols-3"
-          }  pl-2`}
+          }  `}
         >
           <div
             className={`col-span-1 pt-2 ${
               hiddenChat ? "" : "border-r border-blue1"
             } `}
           >
-            <div className="relative grid items-center w-full grid-cols-11 gap-1">
+            <div className="relative grid items-center w-full grid-cols-11 gap-1 pl-2">
               <div className="relative col-span-7">
                 <svg
                   width="14"
@@ -362,7 +353,58 @@ const Message = () => {
                       <div
                         key={item.id}
                         onMouseDown={() => {
-                          setUsersChat([...usersChat, item]);
+                          // focusInput.current.focus();
+                          const isUserExist = usersChat.some(
+                            (user) =>
+                              user?.conversations?.id === item.id ||
+                              user?.secondUser?.id === item.id
+                          );
+
+                          if (!isUserExist) {
+                            setUsersChat([item, ...usersChat]);
+                          }
+
+                          setActiveMessage(
+                            [
+                              id,
+                              !(item?.conversations?.id === id)
+                                ? item?.conversations?.id || item?.id
+                                : item?.secondUser?.id,
+                            ]
+                              .sort()
+                              .join("")
+                          );
+                          setConversationId({
+                            id: [
+                              id,
+                              !(item?.conversations?.id === id)
+                                ? item?.conversations?.id || item?.id
+                                : item?.secondUser?.id,
+                            ]
+                              .sort()
+                              .join(""),
+                            receiverId: !(item?.conversations?.id === id)
+                              ? item?.conversations?.id || item?.id
+                              : item?.secondUser?.id,
+                            name: !(item?.conversations?.id === id)
+                              ? item?.conversations?.username ||
+                                `${
+                                  item?.conversations?.firstName ||
+                                  item?.firstName
+                                } ${
+                                  item?.conversations?.lastName ||
+                                  item?.lastName
+                                }`
+                              : item?.secondUser?.username ||
+                                `${item?.secondUser?.firstName} ${item?.secondUser?.lastName}`,
+                            image: !(item?.conversations?.id === id)
+                              ? convertBase64ToImage(
+                                  item?.conversations?.avatar || item?.avatar
+                                ) || "/21011598.jpg"
+                              : convertBase64ToImage(
+                                  item?.secondUser?.avatar
+                                ) || "/21011598.jpg",
+                          });
                         }}
                         className="flex items-center gap-2 p-1 transition-all cursor-pointer hover:bg-blue1"
                       >
@@ -388,18 +430,46 @@ const Message = () => {
                 </div>
               )}
             </div>
-            <div className="mt-2">
+            <div className="mt-4">
               {usersChat?.length > 0 &&
                 usersChat?.map((item, index) => {
                   return (
                     <div
-                      className="flex items-center justify-center w-full mt-4 cursor-pointer"
+                      className={`${
+                        activeMessage ===
+                        [
+                          id,
+                          !(item?.conversations?.id === id)
+                            ? item?.conversations?.id || item?.id
+                            : item?.secondUser?.id,
+                        ]
+                          .sort()
+                          .join("")
+                          ? "bg-blue1"
+                          : ""
+                      } pl-2 py-2 flex items-center justify-center w-full mt-1 cursor-pointer`}
                       key={index}
                       onClick={() => {
-                        // console.log(item);
+                        focusInput.current.focus();
+                        setActiveMessage(
+                          [
+                            id,
+                            !(item?.conversations?.id === id)
+                              ? item?.conversations?.id || item?.id
+                              : item?.secondUser?.id,
+                          ]
+                            .sort()
+                            .join("")
+                        );
                         setConversationId({
-                          ...conversationId,
-                          id: item?.conversations ? item?.id : "",
+                          id: [
+                            id,
+                            !(item?.conversations?.id === id)
+                              ? item?.conversations?.id || item?.id
+                              : item?.secondUser?.id,
+                          ]
+                            .sort()
+                            .join(""),
                           receiverId: !(item?.conversations?.id === id)
                             ? item?.conversations?.id || item?.id
                             : item?.secondUser?.id,
@@ -422,18 +492,66 @@ const Message = () => {
                         });
                       }}
                     >
-                      <img
-                        src={
-                          !(item?.conversations?.id === id)
-                            ? convertBase64ToImage(
-                                item?.conversations?.avatar || item?.avatar
-                              ) || "/21011598.jpg"
-                            : convertBase64ToImage(item?.secondUser?.avatar) ||
-                              "/21011598.jpg"
-                        }
-                        alt=""
-                        className="w-[34px] h-[34px] rounded-full object-cover"
-                      />
+                      <div className="relative w-[44px]">
+                        <img
+                          src={
+                            !(item?.conversations?.id === id)
+                              ? convertBase64ToImage(
+                                  item?.conversations?.avatar || item?.avatar
+                                ) || "/21011598.jpg"
+                              : convertBase64ToImage(
+                                  item?.secondUser?.avatar
+                                ) || "/21011598.jpg"
+                          }
+                          alt=""
+                          className="object-cover w-[34px] h-[34px] rounded-full"
+                        />
+                        <span
+                          className={`absolute flex items-center justify-center p-[2px] bg-white rounded-full bottom-[-2px] right-[-2px]`}
+                        >
+                          {!(item?.conversations?.id === id) ? (
+                            item?.conversations?.isOnline === true ? (
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 2 2"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M1.9375 1C1.9375 1.18542 1.88252 1.36668 1.7795 1.52085C1.67649 1.67502 1.53007 1.79518 1.35877 1.86614C1.18746 1.93709 0.99896 1.95566 0.817103 1.91949C0.635246 1.88331 0.4682 1.79402 0.337088 1.66291C0.205976 1.5318 0.116688 1.36475 0.0805142 1.1829C0.0443406 1.00104 0.0629062 0.81254 0.133863 0.641234C0.204821 0.469929 0.324983 0.323511 0.479154 0.220497C0.633325 0.117483 0.814581 0.0625 1 0.0625C1.24864 0.0625 1.4871 0.161272 1.66291 0.337087C1.83873 0.512903 1.9375 0.75136 1.9375 1Z"
+                                  fill="#31cc46"
+                                />
+                              </svg>
+                            ) : (
+                              <span className="text-[11px] text-[#31cc46] font-normal">
+                                {formatOfflineDuration(
+                                  item?.conversations?.offlineAt
+                                )}
+                              </span>
+                            )
+                          ) : item?.secondUser?.isOnline === true ? (
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 2 2"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M1.9375 1C1.9375 1.18542 1.88252 1.36668 1.7795 1.52085C1.67649 1.67502 1.53007 1.79518 1.35877 1.86614C1.18746 1.93709 0.99896 1.95566 0.817103 1.91949C0.635246 1.88331 0.4682 1.79402 0.337088 1.66291C0.205976 1.5318 0.116688 1.36475 0.0805142 1.1829C0.0443406 1.00104 0.0629062 0.81254 0.133863 0.641234C0.204821 0.469929 0.324983 0.323511 0.479154 0.220497C0.633325 0.117483 0.814581 0.0625 1 0.0625C1.24864 0.0625 1.4871 0.161272 1.66291 0.337087C1.83873 0.512903 1.9375 0.75136 1.9375 1Z"
+                                fill="#31cc46"
+                              />
+                            </svg>
+                          ) : (
+                            <span className="text-[11px] text-[#31cc46] font-normal">
+                              {formatOfflineDuration(
+                                item?.secondUser?.offlineAt
+                              )}
+                            </span>
+                          )}
+                        </span>
+                      </div>
                       <div className="flex flex-col w-full mr-2">
                         <p className="flex justify-between w-full">
                           <span className="ml-2 text-sm font-semibold">
@@ -452,14 +570,26 @@ const Message = () => {
                               20
                             )}
                           </span>
-                          <span className="text-sm text-gray1">25/5</span>
                         </p>
-                        <span className="ml-2 text-sm">
-                          {/* {truncateText(
-                            messages[messages?.length - 1]?.content,
-                            20
-                          )} */}
-                          test
+                        <span className="flex items-center gap-2 ml-2 text-sm">
+                          {truncateText(item?.messagesAlias[0]?.content, 10)}
+                          <svg
+                            width="2"
+                            height="2"
+                            viewBox="0 0 2 2"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M1.9375 1C1.9375 1.18542 1.88252 1.36668 1.7795 1.52085C1.67649 1.67502 1.53007 1.79518 1.35877 1.86614C1.18746 1.93709 0.99896 1.95566 0.817103 1.91949C0.635246 1.88331 0.4682 1.79402 0.337088 1.66291C0.205976 1.5318 0.116688 1.36475 0.0805142 1.1829C0.0443406 1.00104 0.0629062 0.81254 0.133863 0.641234C0.204821 0.469929 0.324983 0.323511 0.479154 0.220497C0.633325 0.117483 0.814581 0.0625 1 0.0625C1.24864 0.0625 1.4871 0.161272 1.66291 0.337087C1.83873 0.512903 1.9375 0.75136 1.9375 1Z"
+                              fill="black"
+                            />
+                          </svg>
+                          <span className="text-gray1">
+                            {formatDateAndDay(
+                              item?.messagesAlias[0]?.createdAt
+                            )}
+                          </span>
                         </span>
                       </div>
                     </div>
@@ -476,33 +606,46 @@ const Message = () => {
               {conversationId.name}
             </div>
             <div
-              className="max-h-[326px] px-2 flex flex-col gap-3 w-full py-3 flex-1 overflow-auto"
+              className="max-h-[326px] overflow-x-hidden px-2 flex flex-col gap-3 w-full py-3 flex-1 overflow-auto"
               ref={contentRef}
             >
+              {loadingConversation && (
+                <div className="flex items-center justify-center h-full">
+                  <p className="custom-loader w-[45px] h-[45px]"></p>
+                </div>
+              )}
               {messages?.length > 0 &&
-                messages?.map((item, index) => (
-                  <div className={`max-w-[100%]`} key={index}>
-                    <span
-                      className={`${
-                        item?.senderId === id
-                          ? "float-right bg-blue5 text-white"
-                          : " float-left bg-grayEC"
-                      }  max-w-[70%] px-3 text-[15px] py-[6px] rounded-xl`}
-                    >
-                      {item?.content}
-                    </span>
-                  </div>
-                ))}
+                messages?.map((item, index) => {
+                  return (
+                    <div className={`max-w-[100%] `} key={index}>
+                      <p
+                        className={`${
+                          item?.senderId === id
+                            ? "float-right bg-blue5 text-white"
+                            : " float-left bg-grayEC"
+                        }  max-w-[70%] break-words whitespace-pre-line overflow-hidden h-auto px-3 text-[15px] py-[6px] rounded-xl`}
+                      >
+                        {item?.content}
+                      </p>
+                    </div>
+                  );
+                })}
             </div>
-            <div className="h-[130px] pb-2 flex pl-[2px] flex-col border-t border-blue1">
-              <input
-                type="text"
+            <div className="h-[130px] pb-2 flex pl-[0px] flex-col border-t border-blue1">
+              <textarea
+                ref={focusInput}
                 placeholder="Enter your message"
-                className="w-full p-2 text-[15px] outline-none"
+                className="w-full p-2 text-[14px] leading-4 outline-none focus:bg-grayEC resize-none transition-all"
                 value={messageInput}
                 onChange={(e) => setMessageInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
               />
-              <div className="flex items-center justify-between px-2 mt-4">
+              <div className="flex items-center justify-between px-2 mt-2">
                 <span className="text-xs">List Icon, Img, ...</span>
                 <button className="" onClick={handleSendMessage}>
                   <svg

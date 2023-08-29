@@ -10,7 +10,6 @@ const TrendingCategories = ({ isLoading }) => {
     queryKey: ["apiGetCategories"],
     queryFn: () => apiGetCategories(),
   });
-  //   console.log(category.categories);
   return (
     <div className="mt-20 px-[5%]">
       <h2 className="text-[22px] font-bold">Browse Trending Categories</h2>

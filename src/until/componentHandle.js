@@ -34,3 +34,54 @@ export function truncateText(text = "", maxLength) {
     return text.substring(0, maxLength) + "...";
   }
 }
+
+export function formatDateAndDay(inputDate) {
+  const date = new Date(inputDate);
+  const currentDate = new Date();
+
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const inputYear = date.getFullYear();
+  const inputMonth = date.getMonth() + 1; // Months are 0-indexed
+  const inputDay = date.getDate();
+  const inputHour = date.getHours();
+  const inputMinute = date.getMinutes();
+
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
+
+  if (
+    inputYear === currentYear &&
+    inputMonth === currentMonth &&
+    inputDay === currentDay
+  ) {
+    return `${inputHour}:${inputMinute}`;
+  } else if (currentDate - date < 7 * 24 * 60 * 60 * 1000) {
+    const dayOfWeek = daysOfWeek[date.getDay()];
+    return dayOfWeek;
+  } else {
+    return `${inputDay}/${inputMonth}`;
+  }
+}
+
+export function formatOfflineDuration(offlineAt) {
+  const offlineTime = new Date(offlineAt);
+  const currentTime = new Date();
+  const timeDiff = Math.floor((currentTime - offlineTime) / 1000); // Time difference in seconds
+
+  if (timeDiff < 60) {
+    // Less than 1 minute
+    return `${timeDiff}s`;
+  } else if (timeDiff < 60 * 60) {
+    // Less than 1 hour
+    return `${Math.floor(timeDiff / 60)}min`;
+  } else if (timeDiff < 24 * 60 * 60) {
+    // Less than 1 day
+    return `${Math.floor(timeDiff / (60 * 60))}hr`;
+  } else {
+    // More than 1 day
+    const days = Math.floor(timeDiff / (24 * 60 * 60));
+    return `${days}d`;
+  }
+}

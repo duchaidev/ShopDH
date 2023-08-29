@@ -38,7 +38,7 @@ const AddProductSellerPage = () => {
     price: "",
     category: [],
     urlDemo: "",
-    popular: false,
+    popular: true,
     urlDownload: "",
     points: 200,
     technology: "",
@@ -214,7 +214,6 @@ const AddProductSellerPage = () => {
     if (id) {
       await apiEditProduct(
         {
-          popular: true,
           ...values,
           imageUrls: listImage,
           classifies: classifies,
@@ -249,7 +248,7 @@ const AddProductSellerPage = () => {
         price: "",
         category: "",
         urlDemo: "",
-        popular: false,
+        popular: true,
         urlDownload: "",
         points: 200,
         technology: "",
