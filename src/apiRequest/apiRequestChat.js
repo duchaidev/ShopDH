@@ -27,3 +27,15 @@ export const getUserConversation = async (id) => {
     throw error;
   }
 };
+
+export const apiGetUserByValue = async (value) => {
+  try {
+    const res = await axios.get(`http://localhost:8000/v1/chat/all-user`, {
+      params: { value },
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};

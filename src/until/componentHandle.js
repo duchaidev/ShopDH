@@ -1,4 +1,9 @@
 import { Buffer } from "buffer";
+import { io } from "socket.io-client";
+
+export const socket = io("http://localhost:8000", {
+  transports: ["websocket", "polling", "flashsocket"],
+});
 
 export const toBase64 = (file) =>
   new Promise((resolve, reject) => {

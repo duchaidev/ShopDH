@@ -1,24 +1,17 @@
-import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
-import {
-  convertBase64ToImage,
-  formatDateAndDay,
-  formatOfflineDuration,
-  truncateText,
-} from "../../until/componentHandle";
+import { socket } from "../../until/componentHandle";
 import { useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import {
   apiGetMessage,
+  apiGetUserByValue,
   getUserConversation,
 } from "../../apiRequest/apiRequestChat";
+import SearchUserChat from "../../module/message/SearchUserChat";
+import ListUserChat from "../../module/message/ListUserChat";
+import SendMessage from "../../module/message/SendMessage";
 
-const socket = io("http://localhost:8000", {
-  transports: ["websocket", "polling", "flashsocket"],
-});
 const Message = () => {
-  const contentRef = useRef(null);
   const { id } = useSelector((state) => state.register.login.dataUser);
   const [showChatMini, setShowChatMini] = useState(null);
   const [hiddenChat, setHiddenChat] = useState(false);
@@ -34,7 +27,6 @@ const Message = () => {
     name: "",
     image: "",
   });
-  console.log(usersChat);
   const [search, setSearch] = useState({
     value: "",
     data: [],
@@ -54,13 +46,18 @@ const Message = () => {
       enabled: false, // Không tự động chạy truy vấn khi mount
     }
   );
-  const fetchData = async () => {
+  const fetchDataConversation = async () => {
     const data = await getUserConversation(id);
     setUsersChat([...data]);
   };
   const handleSearch = (key, value) => {
     setSearch({ ...search, [key]: value });
   };
+
+  // Lấy danh sách người dùng có tin nhắn từ API
+  useEffect(() => {
+    fetchDataConversation();
+  }, [id]);
 
   //kết nối socket
   useEffect(() => {
@@ -82,27 +79,6 @@ const Message = () => {
       socket.emit("userDisconnected", id, socket.id); // Tùy theo yêu cầu của bạn
     };
   }, [id]);
-
-  // Lấy danh sách người dùng từ API
-  useEffect(() => {
-    axios
-      .get("http://localhost:8000/v1/chat/all-user", {
-        params: { value: search.value }, // Truyền valueSearch như một tham số
-      })
-      .then((response) => {
-        handleSearch("data", response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching messages:", error);
-      });
-    // socket.emit("joinChat", conversationId?.receiverId); // Người dùng tham gia cuộc trò chuyện
-  }, [search.value]);
-
-  // Lấy danh sách người dùng có tin nhắn từ API
-  useEffect(() => {
-    fetchData();
-  }, [id]);
-
   useEffect(() => {
     refetchMsgConversation();
     setMessages(messageConversation);
@@ -117,14 +93,7 @@ const Message = () => {
             user?.secondUser?.conversationId === message?.senderId
         )
       ) {
-        axios
-          .get(`http://localhost:8000/v1/chat/conversation/${id}`)
-          .then((response) => {
-            setUsersChat([...response.data]);
-          })
-          .catch((error) => {
-            console.error("Error fetching messages:", error);
-          });
+        fetchDataConversation();
       }
       // console.log(usersChat);
       if (message?.conversationId === conversationId?.id) {
@@ -138,47 +107,14 @@ const Message = () => {
     };
   }, [conversationId, messageConversation]);
 
-  const handleSendMessage = async () => {
-    if (messageInput.trim() !== "") {
-      const newMessage = {
-        content: messageInput,
-        senderId: id || "",
-        receiverId: conversationId?.receiverId,
-        name: "New Conversation",
-        conversationId: conversationId?.id || "",
-      };
-
-      // Gửi tin nhắn tới máy chủ
-      socket.emit("sendMessage", newMessage);
-
-      setMessages((prevMessages) => {
-        // Nếu prevMessages chưa được khởi tạo hoặc là null/undefined, khởi tạo là một mảng rỗng
-        if (!prevMessages) {
-          return [newMessage];
-        } else {
-          return [...prevMessages, newMessage];
-        }
-        // Thêm message mới vào mảng
-      });
-      setUsersChat((prevUserChat) => {
-        prevUserChat.map((item) => {
-          if (parseInt(item?.id) === parseInt(conversationId?.id)) {
-            item.messagesAlias[0].content = messageInput;
-            console.log(item.messagesAlias[0].content);
-          }
-          return item;
-        });
-        return [...prevUserChat];
-      });
-      setMessageInput("");
-    }
-  };
-
+  // Lấy danh sách người dùng từ API
   useEffect(() => {
-    // Tự động cuộn xuống dưới cùng khi có tin nhắn mới
-    const contentElement = contentRef.current;
-    contentElement.scrollTop = contentElement.scrollHeight;
-  }, [messages]); // Khi danh sách tin nhắn thay đổi
+    const fetchDataByValue = async () => {
+      const data = await apiGetUserByValue(search.value);
+      handleSearch("data", data);
+    };
+    fetchDataByValue();
+  }, [search.value]);
 
   return (
     <div className="fixed z-50 bottom-0 right-[0.5%] ">
@@ -306,364 +242,39 @@ const Message = () => {
               hiddenChat ? "" : "border-r border-blue1"
             } `}
           >
-            <div className="relative grid items-center w-full grid-cols-11 gap-1 pl-2">
-              <div className="relative col-span-7">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 10 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="absolute cursor-pointer left-2 -translate-y-[50%] top-[50%]"
-                >
-                  <path
-                    d="M7.14694 6.28931H6.69525L6.53516 6.13493C7.11485 5.46256 7.43345 4.60417 7.43282 3.71641C7.43282 2.98137 7.21486 2.26284 6.80649 1.65168C6.39813 1.04052 5.8177 0.564183 5.13862 0.282896C4.45953 0.00161026 3.71229 -0.071987 2.99137 0.0714114C2.27046 0.21481 1.60826 0.568763 1.08851 1.08851C0.568763 1.60826 0.21481 2.27046 0.0714114 2.99137C-0.071987 3.71229 0.00161026 4.45953 0.282896 5.13862C0.564183 5.8177 1.04052 6.39813 1.65168 6.80649C2.26284 7.21486 2.98137 7.43282 3.71641 7.43282C4.63694 7.43282 5.48313 7.09548 6.13493 6.53516L6.28931 6.69525V7.14694L9.14808 10L10 9.14808L7.14694 6.28931ZM3.71641 6.28931C2.29274 6.28931 1.14351 5.14008 1.14351 3.71641C1.14351 2.29274 2.29274 1.14351 3.71641 1.14351C5.14008 1.14351 6.28931 2.29274 6.28931 3.71641C6.28931 5.14008 5.14008 6.28931 3.71641 6.28931Z"
-                    fill="#828282"
-                  />
-                </svg>
-                <input
-                  type="text"
-                  className="max-w-full py-1 pr-2 text-xs transition-all border outline-none pl-7 border-blue1 focus:border-blue6"
-                  placeholder="Tìm kiếm"
-                  value={search.value}
-                  onFocus={() => handleSearch("isShow", true)}
-                  onBlur={() => handleSearch("isShow", false)}
-                  onChange={(e) => handleSearch("value", e.target.value)}
-                />
-              </div>
-              <div className="flex items-center justify-center col-span-4 gap-1 cursor-pointer">
-                <span className="text-sm">Tất cả</span>
-                <svg
-                  width="12"
-                  height="8"
-                  viewBox="0 0 12 8"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6 7.4L0 1.4L1.4 0L6 4.6L10.6 0L12 1.4L6 7.4Z"
-                    fill="#555555"
-                  />
-                </svg>
-              </div>
-              {search.isShow === true && search?.data?.length > 0 && (
-                <div className="absolute flex flex-col gap-2 w-full shadow-sm border border-blue1 bg-blue2 top-[110%] p-1">
-                  {search?.data &&
-                    search?.data?.map((item) => (
-                      <div
-                        key={item.id}
-                        onMouseDown={() => {
-                          // focusInput.current.focus();
-                          const isUserExist = usersChat.some(
-                            (user) =>
-                              user?.conversations?.id === item.id ||
-                              user?.secondUser?.id === item.id
-                          );
-
-                          if (!isUserExist) {
-                            setUsersChat([item, ...usersChat]);
-                          }
-
-                          setActiveMessage(
-                            [
-                              id,
-                              !(item?.conversations?.id === id)
-                                ? item?.conversations?.id || item?.id
-                                : item?.secondUser?.id,
-                            ]
-                              .sort()
-                              .join("")
-                          );
-                          setConversationId({
-                            id: [
-                              id,
-                              !(item?.conversations?.id === id)
-                                ? item?.conversations?.id || item?.id
-                                : item?.secondUser?.id,
-                            ]
-                              .sort()
-                              .join(""),
-                            receiverId: !(item?.conversations?.id === id)
-                              ? item?.conversations?.id || item?.id
-                              : item?.secondUser?.id,
-                            name: !(item?.conversations?.id === id)
-                              ? item?.conversations?.username ||
-                                `${
-                                  item?.conversations?.firstName ||
-                                  item?.firstName
-                                } ${
-                                  item?.conversations?.lastName ||
-                                  item?.lastName
-                                }`
-                              : item?.secondUser?.username ||
-                                `${item?.secondUser?.firstName} ${item?.secondUser?.lastName}`,
-                            image: !(item?.conversations?.id === id)
-                              ? convertBase64ToImage(
-                                  item?.conversations?.avatar || item?.avatar
-                                ) || "/21011598.jpg"
-                              : convertBase64ToImage(
-                                  item?.secondUser?.avatar
-                                ) || "/21011598.jpg",
-                          });
-                        }}
-                        className="flex items-center gap-2 p-1 transition-all cursor-pointer hover:bg-blue1"
-                      >
-                        <img
-                          src={
-                            convertBase64ToImage(item?.avatar) ||
-                            "/21011598.jpg"
-                          }
-                          alt=""
-                          className="w-[22px] h-[22px] rounded-full object-cover"
-                        />
-                        <span className="text-sm">
-                          {truncateText(
-                            item?.username ||
-                              `${item?.firstName} ${item?.lastName} (${
-                                item?.username ? "username" : "name"
-                              })`,
-                            20
-                          )}
-                        </span>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
-            <div className="mt-4">
-              {usersChat?.length > 0 &&
-                usersChat?.map((item, index) => {
-                  return (
-                    <div
-                      className={`${
-                        activeMessage ===
-                        [
-                          id,
-                          !(item?.conversations?.id === id)
-                            ? item?.conversations?.id || item?.id
-                            : item?.secondUser?.id,
-                        ]
-                          .sort()
-                          .join("")
-                          ? "bg-blue1"
-                          : ""
-                      } pl-2 py-2 flex items-center justify-center w-full mt-1 cursor-pointer`}
-                      key={index}
-                      onClick={() => {
-                        focusInput.current.focus();
-                        setActiveMessage(
-                          [
-                            id,
-                            !(item?.conversations?.id === id)
-                              ? item?.conversations?.id || item?.id
-                              : item?.secondUser?.id,
-                          ]
-                            .sort()
-                            .join("")
-                        );
-                        setConversationId({
-                          id: [
-                            id,
-                            !(item?.conversations?.id === id)
-                              ? item?.conversations?.id || item?.id
-                              : item?.secondUser?.id,
-                          ]
-                            .sort()
-                            .join(""),
-                          receiverId: !(item?.conversations?.id === id)
-                            ? item?.conversations?.id || item?.id
-                            : item?.secondUser?.id,
-                          name: !(item?.conversations?.id === id)
-                            ? item?.conversations?.username ||
-                              `${
-                                item?.conversations?.firstName ||
-                                item?.firstName
-                              } ${
-                                item?.conversations?.lastName || item?.lastName
-                              }`
-                            : item?.secondUser?.username ||
-                              `${item?.secondUser?.firstName} ${item?.secondUser?.lastName}`,
-                          image: !(item?.conversations?.id === id)
-                            ? convertBase64ToImage(
-                                item?.conversations?.avatar || item?.avatar
-                              ) || "/21011598.jpg"
-                            : convertBase64ToImage(item?.secondUser?.avatar) ||
-                              "/21011598.jpg",
-                        });
-                      }}
-                    >
-                      <div className="relative w-[44px]">
-                        <img
-                          src={
-                            !(item?.conversations?.id === id)
-                              ? convertBase64ToImage(
-                                  item?.conversations?.avatar || item?.avatar
-                                ) || "/21011598.jpg"
-                              : convertBase64ToImage(
-                                  item?.secondUser?.avatar
-                                ) || "/21011598.jpg"
-                          }
-                          alt=""
-                          className="object-cover w-[34px] h-[34px] rounded-full"
-                        />
-                        <span
-                          className={`absolute flex items-center justify-center p-[2px] bg-white rounded-full bottom-[-2px] right-[-2px]`}
-                        >
-                          {!(item?.conversations?.id === id) ? (
-                            item?.conversations?.isOnline === true ? (
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 2 2"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M1.9375 1C1.9375 1.18542 1.88252 1.36668 1.7795 1.52085C1.67649 1.67502 1.53007 1.79518 1.35877 1.86614C1.18746 1.93709 0.99896 1.95566 0.817103 1.91949C0.635246 1.88331 0.4682 1.79402 0.337088 1.66291C0.205976 1.5318 0.116688 1.36475 0.0805142 1.1829C0.0443406 1.00104 0.0629062 0.81254 0.133863 0.641234C0.204821 0.469929 0.324983 0.323511 0.479154 0.220497C0.633325 0.117483 0.814581 0.0625 1 0.0625C1.24864 0.0625 1.4871 0.161272 1.66291 0.337087C1.83873 0.512903 1.9375 0.75136 1.9375 1Z"
-                                  fill="#31cc46"
-                                />
-                              </svg>
-                            ) : (
-                              <span className="text-[11px] text-[#31cc46] font-normal">
-                                {formatOfflineDuration(
-                                  item?.conversations?.offlineAt
-                                )}
-                              </span>
-                            )
-                          ) : item?.secondUser?.isOnline === true ? (
-                            <svg
-                              width="10"
-                              height="10"
-                              viewBox="0 0 2 2"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M1.9375 1C1.9375 1.18542 1.88252 1.36668 1.7795 1.52085C1.67649 1.67502 1.53007 1.79518 1.35877 1.86614C1.18746 1.93709 0.99896 1.95566 0.817103 1.91949C0.635246 1.88331 0.4682 1.79402 0.337088 1.66291C0.205976 1.5318 0.116688 1.36475 0.0805142 1.1829C0.0443406 1.00104 0.0629062 0.81254 0.133863 0.641234C0.204821 0.469929 0.324983 0.323511 0.479154 0.220497C0.633325 0.117483 0.814581 0.0625 1 0.0625C1.24864 0.0625 1.4871 0.161272 1.66291 0.337087C1.83873 0.512903 1.9375 0.75136 1.9375 1Z"
-                                fill="#31cc46"
-                              />
-                            </svg>
-                          ) : (
-                            <span className="text-[11px] text-[#31cc46] font-normal">
-                              {formatOfflineDuration(
-                                item?.secondUser?.offlineAt
-                              )}
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                      <div className="flex flex-col w-full mr-2">
-                        <p className="flex justify-between w-full">
-                          <span className="ml-2 text-sm font-semibold">
-                            {truncateText(
-                              !(item?.conversations?.id === id)
-                                ? item?.conversations?.username ||
-                                    `${
-                                      item?.conversations?.firstName ||
-                                      item?.firstName
-                                    } ${
-                                      item?.conversations?.lastName ||
-                                      item?.lastName
-                                    }`
-                                : item?.secondUser?.username ||
-                                    `${item?.secondUser?.firstName} ${item?.secondUser?.lastName}`,
-                              20
-                            )}
-                          </span>
-                        </p>
-                        <span className="flex items-center gap-2 ml-2 text-sm">
-                          {truncateText(item?.messagesAlias[0]?.content, 10)}
-                          <svg
-                            width="2"
-                            height="2"
-                            viewBox="0 0 2 2"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M1.9375 1C1.9375 1.18542 1.88252 1.36668 1.7795 1.52085C1.67649 1.67502 1.53007 1.79518 1.35877 1.86614C1.18746 1.93709 0.99896 1.95566 0.817103 1.91949C0.635246 1.88331 0.4682 1.79402 0.337088 1.66291C0.205976 1.5318 0.116688 1.36475 0.0805142 1.1829C0.0443406 1.00104 0.0629062 0.81254 0.133863 0.641234C0.204821 0.469929 0.324983 0.323511 0.479154 0.220497C0.633325 0.117483 0.814581 0.0625 1 0.0625C1.24864 0.0625 1.4871 0.161272 1.66291 0.337087C1.83873 0.512903 1.9375 0.75136 1.9375 1Z"
-                              fill="black"
-                            />
-                          </svg>
-                          <span className="text-gray1">
-                            {formatDateAndDay(
-                              item?.messagesAlias[0]?.createdAt
-                            )}
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
+            {/*=================================== Search User Chat ===================================*/}
+            <SearchUserChat
+              id={id}
+              search={search}
+              handleSearch={handleSearch}
+              usersChat={usersChat}
+              setUsersChat={setUsersChat}
+              setActiveMessage={setActiveMessage}
+              setConversationId={setConversationId}
+            ></SearchUserChat>
+            {/*=================================== List User Chat ===================================*/}
+            <ListUserChat
+              id={id}
+              usersChat={usersChat}
+              activeMessage={activeMessage}
+              focusInput={focusInput}
+              setActiveMessage={setActiveMessage}
+              setConversationId={setConversationId}
+            ></ListUserChat>
           </div>
-          <div
-            className={`col-span-2 flex flex-col justify-between h-[100%] ${
-              hiddenChat ? "hidden" : ""
-            } ${conversationId?.name ? "" : "opacity-0"}`}
-          >
-            <div className="h-[42px] border-blue1 border-b flex items-center pl-3">
-              {conversationId.name}
-            </div>
-            <div
-              className="max-h-[326px] overflow-x-hidden px-2 flex flex-col gap-3 w-full py-3 flex-1 overflow-auto"
-              ref={contentRef}
-            >
-              {loadingConversation && (
-                <div className="flex items-center justify-center h-full">
-                  <p className="custom-loader w-[45px] h-[45px]"></p>
-                </div>
-              )}
-              {messages?.length > 0 &&
-                messages?.map((item, index) => {
-                  return (
-                    <div className={`max-w-[100%] `} key={index}>
-                      <p
-                        className={`${
-                          item?.senderId === id
-                            ? "float-right bg-blue5 text-white"
-                            : " float-left bg-grayEC"
-                        }  max-w-[70%] break-words whitespace-pre-line overflow-hidden h-auto px-3 text-[15px] py-[6px] rounded-xl`}
-                      >
-                        {item?.content}
-                      </p>
-                    </div>
-                  );
-                })}
-            </div>
-            <div className="h-[130px] pb-2 flex pl-[0px] flex-col border-t border-blue1">
-              <textarea
-                ref={focusInput}
-                placeholder="Enter your message"
-                className="w-full p-2 text-[14px] leading-4 outline-none focus:bg-grayEC resize-none transition-all"
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-              />
-              <div className="flex items-center justify-between px-2 mt-2">
-                <span className="text-xs">List Icon, Img, ...</span>
-                <button className="" onClick={handleSendMessage}>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="gray"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`transition-all ${
-                      messageInput ? "fill-blue6" : ""
-                    } `}
-                  >
-                    <path d="M15.1564 7.44369L1.40636 0.568693C1.29859 0.514797 1.17754 0.493202 1.05778 0.506509C0.938028 0.519815 0.82467 0.567455 0.731361 0.643693C0.642251 0.718376 0.57574 0.816434 0.539304 0.926845C0.502869 1.03726 0.497953 1.15564 0.525111 1.26869L2.18136 7.37494H9.25011V8.62494H2.18136L0.500111 14.7124C0.474627 14.8069 0.471653 14.9059 0.491426 15.0017C0.511199 15.0975 0.553169 15.1873 0.61396 15.2639C0.674751 15.3404 0.752668 15.4017 0.841444 15.4427C0.930221 15.4837 1.02738 15.5033 1.12511 15.4999C1.22295 15.4994 1.31928 15.4758 1.40636 15.4312L15.1564 8.55619C15.2587 8.50374 15.3447 8.42406 15.4046 8.32591C15.4646 8.22777 15.4964 8.11497 15.4964 7.99994C15.4964 7.88491 15.4646 7.77212 15.4046 7.67397C15.3447 7.57583 15.2587 7.49614 15.1564 7.44369Z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
+          {/*=================================== Send Message Chat ===================================*/}
+          <SendMessage
+            hiddenChat={hiddenChat}
+            conversationId={conversationId}
+            loadingConversation={loadingConversation}
+            messages={messages}
+            id={id}
+            focusInput={focusInput}
+            messageInput={messageInput}
+            setMessageInput={setMessageInput}
+            setMessages={setMessages}
+            setUsersChat={setUsersChat}
+          ></SendMessage>
         </div>
       </div>
     </div>

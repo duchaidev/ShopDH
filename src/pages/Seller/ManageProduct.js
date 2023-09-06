@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AllProduct from "./../../module/manageProduct/AllProduct";
-import ItemManageProduct from "../../components/product/ItemManageProduct";
 import { useDispatch, useSelector } from "react-redux";
 import {
   apiGetAllProductSeller,
@@ -8,9 +7,11 @@ import {
 } from "../../apiRequest/apiRequestProduct";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
+import ItemManageProduct from "../../module/manageProduct/ItemManageProduct";
 
 const classNameHeader =
   "py-5 text-center  border-b-[2px] cursor-pointer transition-all";
+
 const ManageProduct = () => {
   const [isShow, setIsShow] = useState(0);
   const { id } = useSelector((state) => state.register.login.dataUser);
