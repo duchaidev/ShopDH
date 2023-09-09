@@ -6,6 +6,6 @@ services:
         context: .
         dockerfile: Dockerfile
       expose:
-        - 3002
+        - 80
       ports:
-        - 3002:80
+        - 80:80

@@ -23,7 +23,7 @@ FROM nginx:1.23.3
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Sao chép tệp cấu hình Nginx tùy chỉnh của bạn
-# COPY default.conf /etc/nginx/conf.d/default.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
 
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
