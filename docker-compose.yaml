@@ -13,3 +13,5 @@ services:
     volumes:
       - ./fe-shopweb/build:/usr/share/nginx/html
       - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - reactjs-app
