@@ -13,6 +13,7 @@ import SendMessage from "../../module/message/SendMessage";
 
 const Message = () => {
   const { id } = useSelector((state) => state.register.login.dataUser);
+
   const [showChatMini, setShowChatMini] = useState(null);
   const [hiddenChat, setHiddenChat] = useState(false);
 
@@ -53,7 +54,6 @@ const Message = () => {
   const handleSearch = (key, value) => {
     setSearch({ ...search, [key]: value });
   };
-
   // Lấy danh sách người dùng có tin nhắn từ API
   useEffect(() => {
     fetchDataConversation();
@@ -116,6 +116,7 @@ const Message = () => {
     fetchDataByValue();
   }, [search.value]);
 
+  if (!id) return null;
   return (
     <div className="fixed z-50 bottom-0 right-[0.5%] ">
       {/* -------------------------------------button Chat Mini--------------------------------------- */}

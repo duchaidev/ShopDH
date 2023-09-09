@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  reactjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Chạy container ở chế độ detached (nền)
+    restart: always
+  nginx:
+    image: nginx:1.23.3
+    ports:
+      - 3002:80
+    volumes:
+      - ./fe-shopweb/build:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf

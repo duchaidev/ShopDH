@@ -2,12 +2,12 @@ import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import NavBarLayoutSeller from "./layoutSeller/NavBarLayoutSeller";
 import NotiLayoutSeller from "./layoutSeller/NotiLayoutSeller";
-import Message from "./footer/Message";
+// import Message from "./footer/Message";
 
 const LayoutSeller = () => {
   return (
     <div className="bg-[#f6f6f6] w-full min-h-screen">
-      <Message></Message>
+      {/* <Message></Message> */}
       <div className="w-full fixed h-[60px] bg-white z-50 shadow-sm px-[2%] border-b border-blue6">
         <div className="flex items-center justify-between h-full ">
           {/*------------------LOGO-------------------*/}

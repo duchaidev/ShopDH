@@ -7,7 +7,7 @@ export const apiAddProduct = async (dataProduct, dispatch) => {
   dispatch(addStart());
   try {
     const res = await axios.post(
-      "http://localhost:8000/v1/product/add",
+      `${process.env.REACT_APP_BACKEND_URL}/v1/product/add`,
       dataProduct,
       {
         withCredentials: true,
@@ -22,7 +22,7 @@ export const apiAddProduct = async (dataProduct, dispatch) => {
 // Định nghĩa hàm fetch dữ liệu
 export const fetchProductSeller = async (userId) => {
   const res = await axios.get(
-    `http://localhost:8000/v1/product/user/${userId}`,
+    `${process.env.REACT_APP_BACKEND_URL}/v1/product/user/${userId}`,
     {
       withCredentials: true,
     }
@@ -32,7 +32,7 @@ export const fetchProductSeller = async (userId) => {
 
 export const fetchProductPopular = async (category) => {
   const res = await axios.get(
-    `http://localhost:8000/v1/product/popular/${category}`,
+    `${process.env.REACT_APP_BACKEND_URL}/v1/product/popular/${category}`,
     {
       withCredentials: true,
     }
@@ -41,7 +41,7 @@ export const fetchProductPopular = async (category) => {
 };
 export const fetchProductWithCategory = async (page, limit = 1) => {
   const res = await axios.get(
-    `http://localhost:8000/v1/product/category?page=${page}&limit=${limit}`,
+    `${process.env.REACT_APP_BACKEND_URL}/v1/product/category?page=${page}&limit=${limit}`,
     {
       withCredentials: true,
     }
@@ -51,9 +51,12 @@ export const fetchProductWithCategory = async (page, limit = 1) => {
 
 export const apiDeleteProduct = async (id, dispatch) => {
   try {
-    await axios.delete(`http://localhost:8000/v1/product/delete/${id}`, {
-      withCredentials: true,
-    });
+    await axios.delete(
+      `${process.env.REACT_APP_BACKEND_URL}/v1/product/delete/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
   } catch (error) {
     throw error;
   }
@@ -62,7 +65,7 @@ export const apiEditProduct = async (dataProduct, dispatch) => {
   dispatch(addStart());
   try {
     const res = await axios.put(
-      "http://localhost:8000/v1/product/edit",
+      `${process.env.REACT_APP_BACKEND_URL}/v1/product/edit`,
       dataProduct,
       {
         withCredentials: true,
@@ -78,9 +81,12 @@ export const apiEditProduct = async (dataProduct, dispatch) => {
 export const apiGetOneProduct = async (id) => {
   console.log(id);
   try {
-    const res = await axios.get(`http://localhost:8000/v1/product/${id}`, {
-      withCredentials: true,
-    });
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/v1/product/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
     return res.data;
   } catch (error) {
     throw error;
@@ -90,7 +96,7 @@ export const apiGetOneProduct = async (id) => {
 export const apiGetCategories = async (dispatch) => {
   try {
     const res = await axios.get(
-      `http://localhost:8000/v1/product/getcategory`,
+      `${process.env.REACT_APP_BACKEND_URL}/v1/product/getcategory`,
       {
         withCredentials: true,
       }

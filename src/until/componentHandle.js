@@ -1,7 +1,7 @@
 import { Buffer } from "buffer";
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:8000", {
+export const socket = io(`${process.env.REACT_APP_BACKEND_URL}`, {
   transports: ["websocket", "polling", "flashsocket"],
 });
 

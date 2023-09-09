@@ -16,7 +16,7 @@ const AddCategory = () => {
   const postCategory = async () => {
     try {
       await axios.post(
-        "http://localhost:8000/v1/product/addcategory",
+        `${process.env.REACT_APP_BACKEND_URL}/v1/product/addcategory`,
         valueInput
       );
       toast.success("Thêm thành công");

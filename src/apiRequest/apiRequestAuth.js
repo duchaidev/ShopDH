@@ -12,7 +12,10 @@ import {
 export const apiRegister = async (user, dispatch, navigator) => {
   dispatch(registerStart());
   try {
-    await axios.post("http://localhost:8000/v1/auth/register", user);
+    await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/v1/auth/register`,
+      user
+    );
     dispatch(registerSuccess());
     toast.success("Đăng ký thành công");
     navigator("/");
@@ -26,10 +29,13 @@ export const apiRegister = async (user, dispatch, navigator) => {
 export const apiLogin = async (user, dispatch, navigator) => {
   dispatch(loginStart());
   try {
-    // const res = await axios.post("http://localhost:8000/v1/auth/login", user);
-    const res = await axios.post("http://localhost:8000/v1/auth/login", user, {
-      withCredentials: true,
-    });
+    const res = await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/v1/auth/login`,
+      user,
+      {
+        withCredentials: true,
+      }
+    );
     dispatch(loginSuccess(res.data));
     navigator("/");
   } catch (e) {
@@ -42,7 +48,7 @@ export const apiEditUser = async (accessToken, newUser, dispatch, axiosJWT) => {
   dispatch(loginStart());
   try {
     const res = await axiosJWT.put(
-      "http://localhost:8000/v1/user/edit",
+      `${process.env.REACT_APP_BACKEND_URL}/v1/user/edit`,
       newUser,
       {
         headers: { token: `Bearer ${accessToken}` },
@@ -59,7 +65,7 @@ export const apiEditUser = async (accessToken, newUser, dispatch, axiosJWT) => {
 export const apiLogout = async (dispatch, navigator) => {
   dispatch(loginStart());
   try {
-    await axios.post("http://localhost:8000/v1/auth/logout", {
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/v1/auth/logout`, {
       withCredentials: true,
     });
     dispatch(loginSuccess(null));

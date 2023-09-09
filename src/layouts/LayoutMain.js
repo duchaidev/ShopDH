@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import { Outlet } from "react-router-dom";
-import Message from "./footer/Message";
+// import Message from "./footer/Message";
 
 const LayoutMain = () => {
   return (
     <div>
-      <Message></Message>
+      {/* <Message></Message> */}
       <Header></Header>
       <div className="">
         <Outlet></Outlet>

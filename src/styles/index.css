@@ -1,0 +1,230 @@
+@charset "UTF-8";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+body {
+  min-height: 100vh;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.flexCustom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Kiểu thanh cuộn ngang */
+*::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 100rem;
+}
+
+/* Kiểu thanh cuộn dọc */
+*::-webkit-scrollbar-track {
+  background-color: #e2e9ff;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #008d73;
+}
+
+.dropdown-content {
+  opacity: 0;
+  transition: all 0.25s ease;
+  visibility: hidden;
+  transform: translateY(-10px); /* Có thể thay đổi giá trị này để điều chỉnh khoảng cách cuộn */
+}
+
+.dropdown-content.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(5px); /* Có thể thay đổi giá trị này để điều chỉnh khoảng cách cuộn */
+}
+
+.bg_linear {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) -127.71%, rgba(255, 255, 255, 0) -127.71%, #FFFFFF 86.98%);
+}
+
+.zoomIn {
+  animation: zoomIn 0.3s ease 0s 1 forwards;
+}
+
+@keyframes zoomIn {
+  0% {
+    width: 100px;
+    height: 40px;
+    opacity: 0;
+    display: block;
+  }
+  100% {
+    width: 630px;
+    height: 500px;
+    opacity: 100;
+    display: block;
+  }
+}
+.zoomOut {
+  animation: zoomOut 0.3s ease 0s 1 forwards;
+}
+
+@keyframes zoomOut {
+  0% {
+    width: 630px;
+    height: 500px;
+    opacity: 100;
+    display: block;
+  }
+  100% {
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    border: none;
+  }
+}
+.zoomOutHiddenChat {
+  animation: zoomOutHiddenChat 0.2s ease 0s 1 forwards;
+}
+
+@keyframes zoomOutHiddenChat {
+  0% {
+    width: 208px;
+    height: 498px;
+    opacity: 100;
+    display: block;
+  }
+  100% {
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    border: none;
+  }
+}
+.hiddenChat {
+  animation: hiddenChat 0.3s ease 0s 1 forwards;
+}
+
+@keyframes hiddenChat {
+  0% {
+    width: 630px;
+    height: 500px;
+  }
+  100% {
+    width: 210px;
+    height: 500px;
+  }
+}
+.showChat {
+  animation: showChat 0.2s ease 0s 1 forwards;
+}
+
+@keyframes showChat {
+  0% {
+    width: 210px;
+    height: 500px;
+  }
+  100% {
+    width: 630px;
+    height: 500px;
+  }
+}
+.itemMenuProfile.active {
+  color: #00C09E;
+}
+.itemMenuProfile.active p {
+  background-color: #00C09E;
+  border: #00C09E;
+}
+.itemMenuProfile.active svg path {
+  fill: #00C09E;
+}
+
+.dropdownShowMenuProfile {
+  animation: dropdownShowMenuProfile 0.2s ease 0s 1 forwards;
+}
+
+@keyframes dropdownShowMenuProfile {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  100% {
+    height: auto;
+    opacity: 1;
+  }
+}
+.dropdownHiddenMenuProfile {
+  animation: dropdownHiddenMenuProfile 0.2s ease 0s 1 forwards;
+}
+
+@keyframes dropdownHiddenMenuProfile {
+  0% {
+    height: auto;
+    opacity: 1;
+  }
+  100% {
+    height: 0;
+    opacity: 0;
+  }
+}
+.dropDownShowDetailPriceProductHistory {
+  animation: dropDownShowDetailPriceProductHistory 0.25s ease 0s 1 forwards;
+}
+
+@keyframes dropDownShowDetailPriceProductHistory {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  100% {
+    height: auto;
+    opacity: 1;
+  }
+}
+.custom-loader {
+  border-radius: 50%;
+  background: conic-gradient(rgba(0, 0, 0, 0) 10%, #766DF4);
+  -webkit-mask: radial-gradient(farthest-side, rgba(0, 0, 0, 0) calc(100% - 8px), #000 0);
+  animation: s3 1s infinite linear;
+}
+
+@keyframes s3 {
+  to {
+    transform: rotate(1turn);
+  }
+}
+.html-content ul, .html-content li {
+  /* Để các thuộc tính cơ bản nguyên trạng */
+  list-style: initial;
+  margin: initial;
+  padding: initial;
+  /* Định nghĩa các style cụ thể cho các thẻ HTML */
+  /* ... */
+}/*# sourceMappingURL=index.css.map */
