@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "./../../components/header/Logo";
 import IconDown from "./../../components/header/IconDown";
 import IconSearch from "./../../components/header/IconSearch";
@@ -13,14 +13,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { convertBase64ToImage } from "../../until/componentHandle";
 import { useQuery } from "react-query";
 import { apiGetCategories } from "../../apiRequest/apiRequestProduct";
+import { fetchProductCart } from "../../apiRequest/apiRequestCart";
 
 const Header = () => {
   const [showDropDown, setShowDropDown] = useState(false);
   const { valueDropdown } = useSelector((state) => state?.dropdown);
+  const dispath = useDispatch();
+  const { data: category } = useQuery({
+    queryKey: ["apiGetCategories"],
+    queryFn: () => apiGetCategories(),
+  });
+  const dataCart = useSelector((state) => state.cart.getAllProductInCart);
 
   const [show, setShow] = useState(false);
   const { t } = useTranslation(["home"]);
   const { dataUser } = useSelector((state) => state?.register?.login);
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchProductCart(dataUser?.id, dispath);
+    };
+    fetchData();
+  }, dataUser);
   return (
     <div className="h-[120px] top-0 w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow bg-white z-50">
       <div className="flex justify-between w-full mt-3">
@@ -68,7 +81,7 @@ const Header = () => {
               <IconNoti></IconNoti>
             </span>
           </Tooltip>
-          <div className="relative">
+          <div className="relative ml-1">
             {!dataUser?.email ? (
               <NavLink to="/login" className="font-semibold text-gray2">
                 Sign In
@@ -99,35 +112,57 @@ const Header = () => {
               </div>
             )}
           </div>
-          <NavLink to="/cart">
-            <IconCart></IconCart>
-          </NavLink>
+          <div className="relative group">
+            <NavLink to="/cart">
+              <button className="p-2 transition-all rounded-full group-hover:bg-greenText group-hover:bg-opacity-10">
+                <IconCart></IconCart>
+              </button>
+            </NavLink>
+            <div className="group-hover:opacity-100 group-hover:w-[400px] group-hover:h-auto group-hover:p-2 w-0 h-0 opacity-0 overflow-hidden absolute flex flex-col gap-4 right-0 bg-[#f6f6f6] border border-[#e6e6e6] p-0 shadow-lg transition-opacity duration-200 ease-in-out">
+              {dataCart?.data?.data &&
+                dataCart?.data?.data.map((item, index) => (
+                  <div className="flex justify-between" key={item.id}>
+                    <div className="flex gap-3">
+                      <img
+                        src={item?.image}
+                        alt=""
+                        className="w-[45px] aspect-square object-cover border-[#e6e6e6] border"
+                      />
+                      <div className="flex flex-col gap-1">
+                        {/* <Tooltip title="CHeck"> */}
+                        <span className="max-w-[250px] cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis transition-opacity duration-300 ease-in-out">
+                          {item.title}
+                        </span>
+                        {/* </Tooltip> */}
+                        <span className="px-1 text-white rounded-sm bg-blue6 max-w-max">
+                          Discount: {item.codeDiscount}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-red">đ{item.price}</span>
+                  </div>
+                ))}
+
+              <div className="flex justify-end mt-2">
+                <NavLink to="/cart">
+                  <button className="px-4 py-[6px] text-white rounded-md bg-blue6 bg-opacity-90 max-w-max">
+                    View My Shopping Cart
+                  </button>
+                </NavLink>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex items-center justify-center h-full">
-        <span
-          className={`h-full border-b-[2px] px-7 border-greenBorder flexCustom cursor-pointer`}
-        >
-          Stock Video
-        </span>
-        <span className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom">
-          Stock Video
-        </span>
-        <span className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom">
-          Stock Video
-        </span>
-        <span className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom">
-          Stock Video
-        </span>
-        <span className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom">
-          Stock Video
-        </span>
-        <span className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom">
-          Stock Video
-        </span>
-        <span className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom">
-          Stock Video
-        </span>
+        {category?.categories?.map((item) => (
+          <span
+            className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom"
+            key={item.id}
+          >
+            {item.name}
+          </span>
+        ))}
       </div>
     </div>
   );

@@ -12,8 +12,7 @@ import ListUserChat from "../../module/message/ListUserChat";
 import SendMessage from "../../module/message/SendMessage";
 
 const Message = () => {
-  const { id } = useSelector((state) => state.register.login.dataUser);
-
+  const { dataUser } = useSelector((state) => state.register.login);
   const [showChatMini, setShowChatMini] = useState(null);
   const [hiddenChat, setHiddenChat] = useState(false);
 
@@ -48,7 +47,7 @@ const Message = () => {
     }
   );
   const fetchDataConversation = async () => {
-    const data = await getUserConversation(id);
+    const data = await getUserConversation(dataUser?.id);
     setUsersChat([...data]);
   };
   const handleSearch = (key, value) => {
@@ -57,16 +56,17 @@ const Message = () => {
   // Lấy danh sách người dùng có tin nhắn từ API
   useEffect(() => {
     fetchDataConversation();
-  }, [id]);
+  }, [dataUser?.id]);
 
   //kết nối socket
   useEffect(() => {
+    if (!dataUser?.id) return null;
     // Khi người dùng kết nối hoặc đăng nhập
-    socket.emit("userConnected", id, socket.id);
+    socket.emit("userConnected", dataUser?.id, socket.id);
 
     const handleBeforeUnload = (event) => {
       // Thực hiện tác vụ ngắt kết nối khi người dùng đóng trình duyệt
-      socket.emit("userDisconnected", id, socket.id);
+      socket.emit("userDisconnected", dataUser?.id, socket.id);
 
       // Thông báo xác nhận rời đi cho một số trình duyệt
       event.preventDefault();
@@ -76,10 +76,11 @@ const Message = () => {
     // Đăng ký sự kiện beforeunload
     window.addEventListener("unload", handleBeforeUnload);
     return () => {
-      socket.emit("userDisconnected", id, socket.id); // Tùy theo yêu cầu của bạn
+      socket.emit("userDisconnected", dataUser?.id, socket.id); // Tùy theo yêu cầu của bạn
     };
-  }, [id]);
+  }, [dataUser?.id]);
   useEffect(() => {
+    if (!dataUser?.id) return null;
     refetchMsgConversation();
     setMessages(messageConversation);
 
@@ -109,6 +110,7 @@ const Message = () => {
 
   // Lấy danh sách người dùng từ API
   useEffect(() => {
+    if (!dataUser?.id) return null;
     const fetchDataByValue = async () => {
       const data = await apiGetUserByValue(search.value);
       handleSearch("data", data);
@@ -116,7 +118,7 @@ const Message = () => {
     fetchDataByValue();
   }, [search.value]);
 
-  if (!id) return null;
+  if (!dataUser?.id) return null;
   return (
     <div className="fixed z-50 bottom-0 right-[0.5%] ">
       {/* -------------------------------------button Chat Mini--------------------------------------- */}
@@ -245,7 +247,7 @@ const Message = () => {
           >
             {/*=================================== Search User Chat ===================================*/}
             <SearchUserChat
-              id={id}
+              id={dataUser?.id}
               search={search}
               handleSearch={handleSearch}
               usersChat={usersChat}
@@ -255,7 +257,7 @@ const Message = () => {
             ></SearchUserChat>
             {/*=================================== List User Chat ===================================*/}
             <ListUserChat
-              id={id}
+              id={dataUser?.id}
               usersChat={usersChat}
               activeMessage={activeMessage}
               focusInput={focusInput}
@@ -269,7 +271,7 @@ const Message = () => {
             conversationId={conversationId}
             loadingConversation={loadingConversation}
             messages={messages}
-            id={id}
+            id={dataUser?.id}
             focusInput={focusInput}
             messageInput={messageInput}
             setMessageInput={setMessageInput}

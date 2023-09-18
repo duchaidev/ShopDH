@@ -40,7 +40,7 @@ const Popular = ({ title, url, explore, isLoading, dataPopular }) => {
               {dataPopular?.map((item, index) => (
                 <ItemProduct
                   key={item?.id}
-                  image={convertBase64ToImage(item?.imageMain[0] || "")}
+                  image={item?.imageMain[0] || ""}
                   slugProduct={`/product-details/${item?.slug}`}
                   title={item?.title}
                   author={
@@ -49,6 +49,7 @@ const Popular = ({ title, url, explore, isLoading, dataPopular }) => {
                   }
                   slugAuthor={item?.slugAuthor}
                   price={item?.price}
+                  id={item?.id}
                 ></ItemProduct>
               ))}
             </div>

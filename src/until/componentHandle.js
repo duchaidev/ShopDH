@@ -1,16 +1,9 @@
 import { Buffer } from "buffer";
 import { io } from "socket.io-client";
 
-// export const socket = io(`${process.env.REACT_APP_BACKEND_URL}`, {
-//   transports: ["websocket", "polling", "flashsocket"],
-// });
-
-export const socket = io(
-  "wss://139.59.243.21:8080/socket.io/?EIO=4&transport=websocket",
-  {
-    transports: ["websocket", "polling", "flashsocket"],
-  }
-);
+export const socket = io(`${process.env.REACT_APP_BACKEND_URL_SOCKET}`, {
+  transports: ["websocket", "polling", "flashsocket"],
+});
 
 export const toBase64 = (file) =>
   new Promise((resolve, reject) => {

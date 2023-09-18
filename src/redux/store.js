@@ -14,6 +14,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import productSlide from "./productSlide";
+import cartSlide from "./cartSlide";
 
 const persistConfig = {
   key: "root",
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   register: authSlice,
   dropdown: dropdownSlide,
   product: productSlide,
+  cart: cartSlide,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

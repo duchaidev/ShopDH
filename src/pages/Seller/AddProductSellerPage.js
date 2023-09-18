@@ -43,6 +43,7 @@ const AddProductSellerPage = () => {
     points: 200,
     technology: "",
     status: "ACTIVE",
+    sold: 0,
     preOrder: false,
   });
   // Chạy khi có id để lấy thông tin sản phẩm

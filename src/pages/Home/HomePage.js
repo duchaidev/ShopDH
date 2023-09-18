@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SlideHome from "../../module/homePage/Slide";
 import TrendingCategories from "../../module/homePage/TrendingCategories";
 import SlideFooterHomePage from "../../module/homePage/SlideFooterHomePage";
