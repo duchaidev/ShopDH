@@ -1,9 +1,7 @@
-import React, { Suspense, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Route, Router, Routes } from "react-router-dom";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
-import { useSelector } from "react-redux";
-import { io } from "socket.io-client";
 
 const LayoutMain = React.lazy(() => import("./layouts/LayoutMain"));
 const LayoutProfile = React.lazy(() => import("./layouts/LayoutProfile"));

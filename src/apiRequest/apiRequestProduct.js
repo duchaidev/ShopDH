@@ -79,7 +79,7 @@ export const apiEditProduct = async (dataProduct, dispatch) => {
 };
 
 export const apiGetOneProduct = async (id) => {
-  console.log(id);
+  // console.log(id);
   try {
     const res = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/v1/product/${id}`,

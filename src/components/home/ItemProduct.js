@@ -2,7 +2,6 @@ import React from "react";
 import IconCart from "./../header/IconCart";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartSuccess } from "../../redux/cartSlide";
 import { convertBase64ToImage } from "../../until/componentHandle";
 import { addProductInCart } from "../../apiRequest/apiRequestCart";
 
@@ -23,15 +22,13 @@ const ItemProduct = ({
     userId: dataUser?.id,
     productId: id,
     status: "InCart",
-    image,
+    image: convertBase64ToImage(image || " "),
     title,
     codeDiscount: "",
     price,
     paid: false,
   };
-  if (!dataCart?.data?.data) {
-    dataCart.data.data = [];
-  }
+
   return (
     <div className="transition-all aspect-square group/parent hover:bg-blue2">
       <NavLink to={slugProduct} className="relative">

@@ -24,9 +24,9 @@ const HomePage = () => {
       <Popular
         title="Popular Graphics"
         explore="Explore Graphics"
+        url="/product"
         dataPopular={productPopular?.modifiedProducts}
         isLoading={isLoading}
-        url="/product"
       ></Popular>
       <Popular
         title="Popular Graphics123"

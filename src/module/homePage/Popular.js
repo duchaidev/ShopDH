@@ -2,9 +2,9 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import ItemProduct from "../../components/home/ItemProduct";
 import SkeletonItem from "../../components/skeleton/SkeletonItem";
-import { convertBase64ToImage } from "../../until/componentHandle";
 
 const Popular = ({ title, url, explore, isLoading, dataPopular }) => {
+  // console.log(dataPopular);
   return (
     <div className="mt-20 px-[5%] pb-5">
       <div className="flex justify-between">
@@ -25,9 +25,9 @@ const Popular = ({ title, url, explore, isLoading, dataPopular }) => {
           </svg>
         </NavLink>
       </div>
-      <div className="h-[300px]">
+      <div className="">
         {isLoading ? (
-          <div className="grid w-full grid-cols-5 gap-6 mt-5">
+          <div className="grid h-[300px] w-full grid-cols-5 gap-6 mt-5">
             {Array.from({ length: 5 }).map((_, index) => (
               <div className="w-full h-full" key={index}>
                 <SkeletonItem></SkeletonItem>
@@ -35,8 +35,11 @@ const Popular = ({ title, url, explore, isLoading, dataPopular }) => {
             ))}
           </div>
         ) : (
-          <div>
-            <div className="grid w-full grid-cols-5 gap-6 mt-5">
+          <div className="">
+            <div
+              className="grid w-full grid-cols-5 gap-6 mt-5 overflow-x-auto"
+              style={{ minWidth: "100%" }}
+            >
               {dataPopular?.map((item, index) => (
                 <ItemProduct
                   key={item?.id}

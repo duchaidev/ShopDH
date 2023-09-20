@@ -13,12 +13,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { convertBase64ToImage } from "../../until/componentHandle";
 import { useQuery } from "react-query";
 import { apiGetCategories } from "../../apiRequest/apiRequestProduct";
-import { fetchProductCart } from "../../apiRequest/apiRequestCart";
+import {
+  fetchProductCart,
+  removeProductInCart,
+} from "../../apiRequest/apiRequestCart";
 
 const Header = () => {
   const [showDropDown, setShowDropDown] = useState(false);
   const { valueDropdown } = useSelector((state) => state?.dropdown);
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const { data: category } = useQuery({
     queryKey: ["apiGetCategories"],
     queryFn: () => apiGetCategories(),
@@ -30,10 +33,10 @@ const Header = () => {
   const { dataUser } = useSelector((state) => state?.register?.login);
   useEffect(() => {
     const fetchData = async () => {
-      await fetchProductCart(dataUser?.id, dispath);
+      await fetchProductCart(dataUser?.id, dispatch);
     };
     fetchData();
-  }, dataUser);
+  }, [dataUser?.id]);
   return (
     <div className="h-[120px] top-0 w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow bg-white z-50">
       <div className="flex justify-between w-full mt-3">
@@ -124,7 +127,11 @@ const Header = () => {
                   <div className="flex justify-between" key={item.id}>
                     <div className="flex gap-3">
                       <img
-                        src={item?.image}
+                        src={
+                          item?.image && typeof item.image === "string"
+                            ? item?.image
+                            : convertBase64ToImage(item?.image || " ")
+                        }
                         alt=""
                         className="w-[45px] aspect-square object-cover border-[#e6e6e6] border"
                       />
@@ -135,11 +142,25 @@ const Header = () => {
                         </span>
                         {/* </Tooltip> */}
                         <span className="px-1 text-white rounded-sm bg-blue6 max-w-max">
-                          Discount: {item.codeDiscount}
+                          Discount: {item.codeDiscount || "0%"}
                         </span>
                       </div>
                     </div>
-                    <span className="text-red">đ{item.price}</span>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-red">đ{item.price}</span>
+                      {/*====================================Delete========================================*/}
+                      {/* <button className="p-1 transition-all border border-transparent rounded-full max-w-max hover:border-red group/delete">
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 12 16"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="transition-all fill-black group-hover/delete:fill-red"
+                        >
+                          <path d="M1.00008 13.8333C1.00008 14.2754 1.17568 14.6993 1.48824 15.0118C1.8008 15.3244 2.22472 15.5 2.66675 15.5H9.33341C9.77544 15.5 10.1994 15.3244 10.5119 15.0118C10.8245 14.6993 11.0001 14.2754 11.0001 13.8333V3.83333H1.00008V13.8333ZM2.66675 5.5H9.33341V13.8333H2.66675V5.5ZM8.91675 1.33333L8.08341 0.5H3.91675L3.08341 1.33333H0.166748V3H11.8334V1.33333H8.91675Z" />
+                        </svg>
+                      </button> */}
+                    </div>
                   </div>
                 ))}
 

@@ -25,16 +25,20 @@ import {
   truncateText,
 } from "../../until/componentHandle";
 import IconTech from "../../components/icon/IconTech";
+import { useDispatch, useSelector } from "react-redux";
+import { addProductInCart } from "../../apiRequest/apiRequestCart";
 
 const ProductDetailsPage = () => {
+  const dataCart = useSelector((state) => state.cart.getAllProductInCart);
+  const { dataUser } = useSelector((state) => state?.register?.login);
   const [showDescription, setShowDescription] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const { slug } = useParams();
-  // const [listImg, setListImg] = useState([]);
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  //   // window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-  // }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    // window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+  }, []);
 
   const { data: detailProduct } = useQuery(["detailProduct", slug], () =>
     apiGetOneProduct(slug)
@@ -44,6 +48,37 @@ const ProductDetailsPage = () => {
     ...(detailProduct?.modifiedProduct?.imageMain || ""),
     ...(detailProduct?.modifiedProduct?.images || ""),
   ];
+  const dispatch = useDispatch();
+
+  const [newData, setNewData] = useState({
+    id: dataCart?.data?.data?.length + 1,
+    userId: dataUser?.id,
+    productId: detailProduct?.modifiedProduct?.id,
+    status: "InCart",
+    image: convertBase64ToImage(
+      detailProduct?.modifiedProduct?.imageMain[0] || " "
+    ),
+    title: detailProduct?.modifiedProduct?.title,
+    codeDiscount: "",
+    price: detailProduct?.modifiedProduct?.price,
+    paid: false,
+    category: "",
+  });
+
+  useEffect(() => {
+    setNewData({
+      ...newData,
+      id: dataCart?.data?.data?.length + 1,
+      userId: dataUser?.id,
+      productId: detailProduct?.modifiedProduct?.id,
+      status: "InCart",
+      image: convertBase64ToImage(
+        detailProduct?.modifiedProduct?.imageMain[0] || " "
+      ),
+      title: detailProduct?.modifiedProduct?.title,
+      price: detailProduct?.modifiedProduct?.price,
+    });
+  }, [detailProduct?.modifiedProduct?.id]);
   return (
     <div className="px-[8%] mt-[50px] mb-28">
       <h1 className="font-bold text-[24px]">
@@ -142,7 +177,12 @@ const ProductDetailsPage = () => {
                 USD
               </span>
             </div>
-            <button className="w-full py-4 border-[2px] border-blue7 text-blue7 font-bold text-[18px] transition-all over:opacity-90 cursor-pointer hover:scale-95 rounded-lg">
+            <button
+              className="w-full py-4 border-[2px] border-blue7 text-blue7 font-bold text-[18px] transition-all over:opacity-90 cursor-pointer hover:scale-95 rounded-lg"
+              onClick={() => {
+                addProductInCart(dispatch, newData, dataCart);
+              }}
+            >
               Add To Cart
             </button>
             <button className="w-full py-4 border-[2px] border-blue7 text-white bg-blue7 font-bold transition-all hover:opacity-90 cursor-pointer hover:scale-95 text-[18px] rounded-lg">
@@ -167,6 +207,12 @@ const ProductDetailsPage = () => {
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue="default"
                 name="radio-buttons-group"
+                onChange={(e) => {
+                  setNewData({
+                    ...newData,
+                    category: e.target.value || "",
+                  });
+                }}
               >
                 <p className="flex items-center justify-between w-full">
                   <FormControlLabel

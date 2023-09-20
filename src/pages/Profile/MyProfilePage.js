@@ -29,7 +29,7 @@ const MyProfilePage = () => {
     editUsername: false,
     editPhone: false,
   });
-
+  console.log(dataUser);
   const formattedBirthday = formatISODateToInputDate(dataUser?.birthday);
   // console.log(formattedBirthday);
   const [valueInput, setValueInput] = useState({
