@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Popular from "../../module/homePage/Popular";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { fetchProductCartPage } from "../../apiRequest/apiRequestCart";
-import { fetchProductPopular } from "../../apiRequest/apiRequestProduct";
 import { useQuery } from "react-query";
 import { convertBase64ToImage } from "../../until/componentHandle";
-import { toast } from "react-toastify";
 
 const CartPage = () => {
   document.title = "Cart Page";
-  const dispatch = useDispatch();
   const { dataUser } = useSelector((state) => state?.register?.login);
   // const { loading, error, dataInCartPage } = useSelector(
   //   (state) => state.cart.getAllProductInCart
@@ -25,7 +22,6 @@ const CartPage = () => {
       [itemId]: !prevExpandedItems[itemId], // Toggle the expanded state
     }));
   };
-  const [isShow, setIsShow] = useState(false);
   useEffect(() => {
     const fetchdata = async (category) => {
       const res = await axios.get(
