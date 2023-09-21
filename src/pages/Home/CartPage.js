@@ -6,27 +6,54 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProductCartPage } from "../../apiRequest/apiRequestCart";
 import { fetchProductPopular } from "../../apiRequest/apiRequestProduct";
 import { useQuery } from "react-query";
+import { convertBase64ToImage } from "../../until/componentHandle";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
+  document.title = "Cart Page";
   const dispatch = useDispatch();
   const { dataUser } = useSelector((state) => state?.register?.login);
-  const { loading, error, dataInCartPage } = useSelector(
-    (state) => state.cart.getAllProductInCart
-  );
+  // const { loading, error, dataInCartPage } = useSelector(
+  //   (state) => state.cart.getAllProductInCart
+  // );
+  const [productPopular, setProductPopular] = useState([]);
+  const [expandedItems, setExpandedItems] = useState({});
 
-  const { data: productPopular, isLoading } = useQuery(
-    ["productPopular", "web"],
-    () => fetchProductPopular("web")
-  );
-
+  const handleToggleExpand = (itemId) => {
+    setExpandedItems((prevExpandedItems) => ({
+      ...prevExpandedItems,
+      [itemId]: !prevExpandedItems[itemId], // Toggle the expanded state
+    }));
+  };
+  const [isShow, setIsShow] = useState(false);
   useEffect(() => {
-    const fetchData = async () => {
-      await fetchProductCartPage(dataUser?.id, dispatch);
+    const fetchdata = async (category) => {
+      const res = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/v1/product/popular/${category}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return setProductPopular(res.data);
     };
-    fetchData();
-  }, [dataUser?.id]);
+    fetchdata("web");
+  }, []);
+  // const { data: productPopular, isLoading } = useQuery(
+  //   ["productPopular", "web"],
+  //   () => fetchProductPopular("web")
+  //   );
+  const { data: dataInCartPage } = useQuery(["dataProductCart"], () =>
+    fetchProductCartPage(dataUser?.id)
+  );
 
-  console.log(dataInCartPage);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await fetchProductCartPage(dataUser?.id, dispatch);
+  //   };
+  //   fetchData();
+  // }, [dataUser?.id]);
+  console.log(productPopular);
+  console.log(expandedItems);
   return (
     <div className="mb-32">
       {/*--------------------------------------Cart--------------------------------------*/}
@@ -45,69 +72,100 @@ const CartPage = () => {
             </NavLink>
           </div>
           {/*--------------------------------------Items Product--------------------------------------*/}
-          <div className="grid grid-cols-11 px-6 py-4 mt-3 border-t border-blue1">
-            <div className="flex items-center col-span-8 gap-5">
-              <div className="w-48 p-[6px] border rounded-sm border-blue1">
-                <img
-                  src="https://images.creativemarket.com/0.1.0/ps/16036930/220/146/m2/fpnw/wm0/vintage-collage-creator-01-.jpg?1666887682&s=2dccff9e44c78706f30f868a0c8c34b7"
-                  alt="img"
-                  className="w-full object-cover aspect-[7/4] rounded-sm border border-blue2"
-                />
-              </div>
-              <div className="flex flex-col gap-3 text-base">
-                <div>
-                  <h3 className="text-lg font-medium">
-                    Vintage Collage Creator 750+ Assets
-                  </h3>
-                  <p>
-                    <span>by </span>
-                    <span className="font-medium text-blue6">Le Duc Hai</span>
-                  </p>
-                </div>
-                <div className="">
-                  <span className="text-sm font-semibold text-gray2">
-                    License Type
-                  </span>
-                  <button className="flex w-[340px] h-[42px] items-center px-3 justify-between border bg-blue2 mt-1 rounded-sm border-blue1">
-                    <span className="text-[15px] font-medium">
-                      Personal License
-                    </span>
-                    <span className="flex items-center gap-3 text-[15px] font-medium">
-                      <span>$24.00USD</span>
-                      <span>
-                        <svg
-                          width="12"
-                          height="8"
-                          viewBox="0 0 12 8"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M6.58905 7.08917C6.43277 7.24539 6.22085 7.33316 5.99988 7.33316C5.77891 7.33316 5.56699 7.24539 5.41071 7.08917L0.696546 2.375C0.616954 2.29813 0.553469 2.20617 0.509794 2.1045C0.46612 2.00283 0.443132 1.89348 0.44217 1.78284C0.441209 1.67219 0.462294 1.56245 0.504194 1.46004C0.546095 1.35763 0.607973 1.26458 0.686217 1.18634C0.764461 1.10809 0.857504 1.04622 0.959917 1.00432C1.06233 0.962415 1.17206 0.941331 1.28271 0.942292C1.39336 0.943254 1.50271 0.966242 1.60438 1.00992C1.70605 1.05359 1.79801 1.11708 1.87488 1.19667L5.99988 5.32167L10.1249 1.19667C10.282 1.04487 10.4925 0.960874 10.711 0.962772C10.9295 0.964671 11.1386 1.05231 11.2931 1.20682C11.4476 1.36133 11.5352 1.57034 11.5371 1.78883C11.539 2.00733 11.455 2.21783 11.3032 2.375L6.58905 7.08917Z"
-                            fill="black"
-                          />
-                        </svg>
+          {dataInCartPage?.data?.length > 0 &&
+            dataInCartPage?.data?.map((item) => (
+              <div
+                className="grid grid-cols-11 px-6 py-4 mt-3 border-t border-blue1"
+                key={item.id}
+              >
+                <div className="flex items-center col-span-8 gap-5">
+                  <div className="w-48 p-[6px] border rounded-sm border-blue1">
+                    <img
+                      src={convertBase64ToImage(
+                        item?.productInCart?.image || ""
+                      )}
+                      alt="img"
+                      className="w-full object-cover aspect-[7/4] rounded-sm border border-blue2"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-3 text-base">
+                    <div>
+                      <h3 className="text-lg font-medium">{item?.title}</h3>
+                      <p>
+                        <span>by </span>
+                        <span className="font-medium text-blue6">
+                          {item?.username ||
+                            item?.firstName + " " + item?.lastName}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="relative">
+                      <span className="text-sm font-semibold text-gray2">
+                        License Type
                       </span>
-                    </span>
+                      <button
+                        className="flex w-[340px] h-[42px] items-center px-3 justify-between border bg-blue2 mt-1 rounded-sm border-blue1"
+                        onClick={() => handleToggleExpand(item.id)}
+                      >
+                        <span className="text-[15px] font-medium">
+                          {item?.productInCart?.category || "Default"}
+                        </span>
+                        <span className="flex items-center gap-3 text-[15px] font-medium">
+                          <span>${item?.productInCart?.price}USD</span>
+                          <span>
+                            <svg
+                              width="12"
+                              height="8"
+                              viewBox="0 0 12 8"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M6.58905 7.08917C6.43277 7.24539 6.22085 7.33316 5.99988 7.33316C5.77891 7.33316 5.56699 7.24539 5.41071 7.08917L0.696546 2.375C0.616954 2.29813 0.553469 2.20617 0.509794 2.1045C0.46612 2.00283 0.443132 1.89348 0.44217 1.78284C0.441209 1.67219 0.462294 1.56245 0.504194 1.46004C0.546095 1.35763 0.607973 1.26458 0.686217 1.18634C0.764461 1.10809 0.857504 1.04622 0.959917 1.00432C1.06233 0.962415 1.17206 0.941331 1.28271 0.942292C1.39336 0.943254 1.50271 0.966242 1.60438 1.00992C1.70605 1.05359 1.79801 1.11708 1.87488 1.19667L5.99988 5.32167L10.1249 1.19667C10.282 1.04487 10.4925 0.960874 10.711 0.962772C10.9295 0.964671 11.1386 1.05231 11.2931 1.20682C11.4476 1.36133 11.5352 1.57034 11.5371 1.78883C11.539 2.00733 11.455 2.21783 11.3032 2.375L6.58905 7.08917Z"
+                                fill="black"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                      </button>
+
+                      <div
+                        className={`${
+                          expandedItems[item.id] ? "" : "hidden"
+                        } absolute z-50 mt-1 border rounded-sm shadow-md bg-blue2 border-blue1`}
+                      >
+                        {item?.classification?.length > 0 &&
+                          item?.classification?.map((itemm, index) => (
+                            <button
+                              className="flex w-[339px] h-[42px] items-center px-3 justify-between border-b border-b-blue1"
+                              key={index}
+                            >
+                              <span className="text-[15px] font-medium">
+                                {itemm?.classify}
+                              </span>
+                              <span className="flex items-center gap-3 text-[15px] font-medium">
+                                <span>${itemm?.price}USD</span>
+                              </span>
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end col-span-3">
+                  <span className="text-lg font-bold">
+                    ${item?.productInCart?.price}
+                  </span>
+                  <button className="text-base font-normal text-blue6">
+                    Remove
                   </button>
                 </div>
               </div>
-              {/* <div className='flex items-end h-full gap-5'>
-                                <button className='font-medium text-[24px] px-2'>-</button>
-                                <span>1 seat</span>
-                                <span className='font-medium text-[18px] px-2'>+</span>
-                            </div> */}
-            </div>
-            <div className="flex flex-col items-end col-span-3">
-              <span className="text-lg font-bold">$24</span>
-              <button className="text-base font-normal text-blue6">
-                Remove
-              </button>
-            </div>
-          </div>
+            ))}
         </div>
+
         {/*--------------------------------------Price Product--------------------------------------*/}
         <div className="flex flex-col items-end w-full col-span-3 ">
           <div className="h-10">
@@ -166,6 +224,7 @@ const CartPage = () => {
           </div>
         </div>
       </div>
+
       {/*--------------------------------------Popular--------------------------------------*/}
       <Popular
         title="Popular Graphics"

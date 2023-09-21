@@ -26,7 +26,7 @@ export const fetchProductCart = async (userId, dispatch) => {
 };
 
 export const fetchProductCartPage = async (userId, dispatch) => {
-  dispatch(getCartStart());
+  // dispatch(getCartStart());
   try {
     const res = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/v1/cart/product-in-cartpage/${userId}`,
@@ -34,9 +34,10 @@ export const fetchProductCartPage = async (userId, dispatch) => {
         withCredentials: true,
       }
     );
-    dispatch(getCartPageSuccess(res.data));
+    return res.data;
+    // dispatch(getCartPageSuccess(res.data));
   } catch (e) {
-    dispatch(getCartError());
+    // dispatch(getCartError());
   }
 };
 

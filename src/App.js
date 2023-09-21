@@ -48,20 +48,20 @@ const AddProductSellerPage = React.lazy(() =>
 const ManageProduct = React.lazy(() => import("./pages/Seller/ManageProduct"));
 const AddCategory = React.lazy(() => import("./pages/Seller/AddCategory"));
 
+const LoadingFallback = () => (
+  <div className="bg-[#ffffff] min-h-screen min-w-full flex items-center justify-center">
+    <div className="custom-loader w-[50px] h-[50px]"></div>
+  </div>
+);
+
 const App = () => {
   return (
     <div className="w-[100%]">
-      <Suspense
-        fallback={
-          <div className="bg-[#ffffff] min-h-screen min-w-full flex items-center justify-center">
-            <div className="custom-loader w-[50px] h-[50px]"></div>
-          </div>
-        }
-      >
+      <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* -------------------------------------Main------------------------------------- */}
           <Route path="/" element={<LayoutMain></LayoutMain>}>
-            <Route path="" element={<HomePage></HomePage>}></Route>
+            <Route path="/" element={<HomePage></HomePage>}></Route>
             <Route path="product" element={<ProductPage></ProductPage>}></Route>
             <Route path="cart" element={<CartPage></CartPage>}></Route>
             <Route path="sell" element={<SellPage></SellPage>}></Route>
@@ -82,10 +82,8 @@ const App = () => {
               path="product-details/:slug"
               element={<ProductDetailsPage></ProductDetailsPage>}
             ></Route>
-          </Route>
 
-          {/* -------------------------------------Profile------------------------------------- */}
-          <Route element={<LayoutMain></LayoutMain>}>
+            {/* -------------------------------------Profile------------------------------------- */}
             <Route path="/profile" element={<LayoutProfile></LayoutProfile>}>
               <Route
                 path="my-profile"
@@ -117,6 +115,40 @@ const App = () => {
               ></Route>
             </Route>
           </Route>
+
+          {/* -------------------------------------Profile------------------------------------- */}
+          {/* <Route element={<LayoutMain></LayoutMain>}>
+            <Route path="/profile" element={<LayoutProfile></LayoutProfile>}>
+              <Route
+                path="my-profile"
+                element={<MyProfilePage></MyProfilePage>}
+              ></Route>
+              <Route
+                path="deposit-withdrawal"
+                element={<DepositWithdrawal></DepositWithdrawal>}
+              ></Route>
+              <Route
+                path="history-product"
+                element={<HistoryProductPage></HistoryProductPage>}
+              ></Route>
+              <Route
+                path="change-password"
+                element={<ChangePasswordPage></ChangePasswordPage>}
+              ></Route>
+              <Route
+                path="vourcher"
+                element={<VourcherPage></VourcherPage>}
+              ></Route>
+              <Route
+                path="noti"
+                element={<NotificationPage></NotificationPage>}
+              ></Route>
+              <Route
+                path="accumulate-points"
+                element={<AccumulatePoints></AccumulatePoints>}
+              ></Route>
+            </Route>
+          </Route> */}
 
           {/* -------------------------------------Auth------------------------------------- */}
           <Route path="/register" element={<Register></Register>}></Route>
