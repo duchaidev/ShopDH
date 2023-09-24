@@ -39,9 +39,9 @@ export const fetchProductPopular = async (category) => {
   );
   return res.data;
 };
-export const fetchProductWithCategory = async (page, limit = 1) => {
+export const fetchProductWithCategory = async (page, limit = 1, category) => {
   const res = await axios.get(
-    `${process.env.REACT_APP_BACKEND_URL}/v1/product/category?page=${page}&limit=${limit}`,
+    `${process.env.REACT_APP_BACKEND_URL}/v1/product/category?page=${page}&limit=${limit}&category=${category}`,
     {
       withCredentials: true,
     }

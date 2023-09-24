@@ -9,10 +9,12 @@ const LayoutMain = () => {
     <div>
       <Message></Message>
       <Header></Header>
-      <div className="">
+      <div className="pt-[120px]">
         <Outlet></Outlet>
       </div>
-      <Footer></Footer>
+      <div className="">
+        <Footer></Footer>
+      </div>
     </div>
   );
 };

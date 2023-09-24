@@ -212,6 +212,7 @@ const MyProfilePage = () => {
                   onChange={(e) => {
                     handleChange("sex", e);
                   }}
+                  className="flex items-center gap-3"
                 >
                   <FormControlLabel
                     value="female"

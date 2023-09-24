@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SlideHome from "../../module/homePage/Slide";
 import TrendingCategories from "../../module/homePage/TrendingCategories";
 import SlideFooterHomePage from "../../module/homePage/SlideFooterHomePage";
@@ -14,6 +14,11 @@ const HomePage = () => {
     ["productPopular", "web"],
     () => fetchProductPopular("web")
   );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   //------------------------------------------fetch data------------------------------------------
 
   return (

@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { Route, Router, Routes } from "react-router-dom";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
+import AffiliateMarketing from "./pages/Profile/AffiliateMarketing";
 
 const LayoutMain = React.lazy(() => import("./layouts/LayoutMain"));
 const LayoutProfile = React.lazy(() => import("./layouts/LayoutProfile"));
@@ -62,7 +63,10 @@ const App = () => {
           {/* -------------------------------------Main------------------------------------- */}
           <Route path="/" element={<LayoutMain></LayoutMain>}>
             <Route path="/" element={<HomePage></HomePage>}></Route>
-            <Route path="product" element={<ProductPage></ProductPage>}></Route>
+            <Route
+              path="product/:slug"
+              element={<ProductPage></ProductPage>}
+            ></Route>
             <Route path="cart" element={<CartPage></CartPage>}></Route>
             <Route path="sell" element={<SellPage></SellPage>}></Route>
             <Route
@@ -94,6 +98,10 @@ const App = () => {
                 element={<DepositWithdrawal></DepositWithdrawal>}
               ></Route>
               <Route
+                path="affiliate"
+                element={<AffiliateMarketing></AffiliateMarketing>}
+              ></Route>
+              <Route
                 path="history-product"
                 element={<HistoryProductPage></HistoryProductPage>}
               ></Route>
@@ -115,40 +123,6 @@ const App = () => {
               ></Route>
             </Route>
           </Route>
-
-          {/* -------------------------------------Profile------------------------------------- */}
-          {/* <Route element={<LayoutMain></LayoutMain>}>
-            <Route path="/profile" element={<LayoutProfile></LayoutProfile>}>
-              <Route
-                path="my-profile"
-                element={<MyProfilePage></MyProfilePage>}
-              ></Route>
-              <Route
-                path="deposit-withdrawal"
-                element={<DepositWithdrawal></DepositWithdrawal>}
-              ></Route>
-              <Route
-                path="history-product"
-                element={<HistoryProductPage></HistoryProductPage>}
-              ></Route>
-              <Route
-                path="change-password"
-                element={<ChangePasswordPage></ChangePasswordPage>}
-              ></Route>
-              <Route
-                path="vourcher"
-                element={<VourcherPage></VourcherPage>}
-              ></Route>
-              <Route
-                path="noti"
-                element={<NotificationPage></NotificationPage>}
-              ></Route>
-              <Route
-                path="accumulate-points"
-                element={<AccumulatePoints></AccumulatePoints>}
-              ></Route>
-            </Route>
-          </Route> */}
 
           {/* -------------------------------------Auth------------------------------------- */}
           <Route path="/register" element={<Register></Register>}></Route>

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 import IconCart from "./../header/IconCart";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { convertBase64ToImage } from "../../until/componentHandle";
 import { addProductInCart } from "../../apiRequest/apiRequestCart";
-
+import { fetchProductCartPage } from "../../apiRequest/apiRequestCart";
+import { useQuery } from "react-query";
+import { toast } from "react-toastify";
 const ItemProduct = ({
   image,
   slugProduct,
@@ -17,6 +19,7 @@ const ItemProduct = ({
   const dispatch = useDispatch();
   const dataCart = useSelector((state) => state.cart.getAllProductInCart);
   const { dataUser } = useSelector((state) => state?.register?.login);
+  const toastId = useRef(null);
   const newData = {
     id: dataCart?.data?.data?.length + 1,
     userId: dataUser?.id,
@@ -83,14 +86,7 @@ const ItemProduct = ({
         <div className="flex justify-end gap-3">
           <button
             onClick={() => {
-              addProductInCart(dispatch, newData, dataCart);
-              //   dispatch(
-              //     getCartSuccess({
-              //       message: "Get product in cart successfully",
-              //       data: [...dataCart?.data?.data, newData],
-              //       success: true,
-              //     })
-              //   );
+              addProductInCart(dispatch, newData, dataCart, toastId);
             }}
           >
             <IconCart width={18} height={18}></IconCart>

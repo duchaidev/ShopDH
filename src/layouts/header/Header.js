@@ -6,7 +6,7 @@ import IconNoti from "./../../components/header/IconNoti";
 import IconCart from "./../../components/header/IconCart";
 import DropDown from "../../components/dropDown/DropDown";
 import DropdownInfo from "../../components/dropDown/DropdownInfo";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +22,7 @@ const Header = () => {
   const [showDropDown, setShowDropDown] = useState(false);
   const { valueDropdown } = useSelector((state) => state?.dropdown);
   const dispatch = useDispatch();
+  const { t } = useTranslation(["home"]);
   const { data: category } = useQuery({
     queryKey: ["apiGetCategories"],
     queryFn: () => apiGetCategories(),
@@ -29,7 +30,6 @@ const Header = () => {
   const dataCart = useSelector((state) => state.cart.getAllProductInCart);
 
   const [show, setShow] = useState(false);
-  const { t } = useTranslation(["home"]);
   const { dataUser } = useSelector((state) => state?.register?.login);
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +38,7 @@ const Header = () => {
     fetchData();
   }, [dataUser?.id]);
   return (
-    <div className="h-[120px] top-0 w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow bg-white z-50">
+    <div className="h-[120px] top-0 w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow bg-white z-50 fixed ">
       <div className="flex justify-between w-full mt-3">
         <div className="flex-1">
           <div className="w-[500px] relative h-[40px] border rounded-full border-blue1 bg-blue2 pr-4 flex items-center">
@@ -177,12 +177,13 @@ const Header = () => {
       </div>
       <div className="flex items-center justify-center h-full">
         {category?.categories?.map((item) => (
-          <span
+          <NavLink
+            to={`/product/${item.name}`}
             className="h-full border-b-[2px] px-7 border-transparent hover:border-greenBorder transition-all cursor-pointer flexCustom"
             key={item.id}
           >
             {item.name}
-          </span>
+          </NavLink>
         ))}
       </div>
     </div>

@@ -296,6 +296,7 @@ const AddProductSellerPage = () => {
           setListImage={setListImage}
           setIndex={setIndex}
           imageChange={imageChange}
+          title={"Hình ảnh sản phẩm"}
         ></ImageProduct>
         {/* ================================= Tên sản phẩm ================================= */}
         <TitleProduct values={values} setValue={handleSetValue}></TitleProduct>

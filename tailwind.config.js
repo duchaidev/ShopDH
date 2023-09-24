@@ -6,6 +6,9 @@ module.exports = {
         // Simple 16 column grid
         20: "repeat(20, minmax(0, 1fr))",
       },
+      gridColumn: {
+        "span-15": "span 15 / span 15",
+      },
     },
     screens: {
       sm: "480px",

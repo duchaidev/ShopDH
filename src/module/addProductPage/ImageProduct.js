@@ -7,10 +7,18 @@ const ImageProduct = ({
   setListImage,
   setIndex,
   imageChange,
+  title,
+  className,
+  classNameTitle,
+  totalImage = 9,
 }) => {
   return (
-    <FormUIAddProduct title={"Hình ảnh sản phẩm"}>
-      <span>*{"  "}Hình ảnh tỷ lệ 2:3</span>
+    <FormUIAddProduct
+      title={title}
+      className={className}
+      classNameTitle={classNameTitle}
+    >
+      <span className="text-[15px] text-gray1">*Hình ảnh tỷ lệ 2:3</span>
       <div className="flex gap-2">
         {listImage?.length > 0 &&
           listImage?.map(
@@ -48,10 +56,12 @@ const ImageProduct = ({
               </div>
             )
           )}
-        {listImage?.filter((item) => item).length === 9 ? (
+        {listImage?.filter((item) => item).length === totalImage ? (
           <div></div>
         ) : (
-          <p className="relative w-[78px] flex flex-col items-center gap-1 justify-center h-[78px] rounded-lg border border-dashed border-blue1">
+          <p
+            className={`relative w-[78px] flex flex-col items-center gap-1 justify-center h-[78px] rounded-lg border border-dashed border-blue1`}
+          >
             <input
               type="file"
               className="absolute w-full h-full opacity-0"
@@ -70,8 +80,11 @@ const ImageProduct = ({
                 fill="#00C09E"
               />
             </svg>
-            <span className="text-xs leading-[14px] text-center">
-              Thêm hình ảnh ({listImage?.filter((item) => item).length}/9)
+            <span
+              className={`transition-all text-xs leading-[14px] text-center`}
+            >
+              Thêm hình ảnh ({listImage?.filter((item) => item).length}/
+              {totalImage})
             </span>
           </p>
         )}

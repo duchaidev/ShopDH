@@ -7,6 +7,7 @@ import {
 } from "../redux/cartSlide";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { useRef } from "react";
 
 // Định nghĩa hàm fetch dữ liệu
 export const fetchProductCart = async (userId, dispatch) => {
@@ -25,8 +26,26 @@ export const fetchProductCart = async (userId, dispatch) => {
   }
 };
 
+export const updateCategoryProductInCart = async (
+  userId,
+  productId,
+  category,
+  price
+) => {
+  try {
+    const res = await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}/v1/cart/update-cate-product-in-cart?userId=${userId}&productId=${productId}&category=${category}&price=${price}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return res.data;
+  } catch (e) {
+    toast.error("Update category product in cart error!");
+  }
+};
+
 export const fetchProductCartPage = async (userId, dispatch) => {
-  // dispatch(getCartStart());
   try {
     const res = await axios.get(
       `${process.env.REACT_APP_BACKEND_URL}/v1/cart/product-in-cartpage/${userId}`,
@@ -35,13 +54,28 @@ export const fetchProductCartPage = async (userId, dispatch) => {
       }
     );
     return res.data;
-    // dispatch(getCartPageSuccess(res.data));
   } catch (e) {
-    // dispatch(getCartError());
+    toast.error("Get product in cart error!");
   }
 };
 
-export const addProductInCart = async (dispatch, newData, dataCart) => {
+export const addProductInCart = async (
+  dispatch,
+  newData,
+  dataCart,
+  toastId
+) => {
+  const notify = () =>
+    (toastId.current = toast("Đang thêm sản phẩm vào giỏ hàng...", {
+      autoClose: false,
+      type: toast.TYPE.DEFAULT,
+      icon: "⏳",
+      style: {
+        background: "#CCD4DA", // Đặt màu nền thành màu xám
+        color: "black",
+      },
+    }));
+  notify();
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_BACKEND_URL}/v1/cart/product-cart`,
@@ -51,6 +85,12 @@ export const addProductInCart = async (dispatch, newData, dataCart) => {
       }
     );
     console.log(res.data);
+    toast.update(toastId.current, {
+      render: "Thêm sản phẩm thành công!",
+      type: toast.TYPE.SUCCESS,
+      autoClose: 1000,
+      icon: "🎉",
+    });
     dispatch(
       getCartSuccess({
         message: "Get product in cart successfully",
@@ -58,16 +98,21 @@ export const addProductInCart = async (dispatch, newData, dataCart) => {
         success: true,
       })
     );
-    toast.success("Add product in cart success!", {
-      position: "top-right",
-      style: { boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)", marginTop: "50px" },
-      autoClose: 800,
-    });
+    // toast.success("Add product in cart success!", {
+    //   position: "top-right",
+    //   style: { boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)", marginTop: "50px" },
+    //   autoClose: 800,
+    // });
   } catch (e) {
-    toast.error(e?.response?.data, {
-      position: "top-right",
-      style: { boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)", marginTop: "50px" },
-      autoClose: 800,
+    // toast.error(e?.response?.data, {
+    //   position: "top-right",
+    //   style: { boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)", marginTop: "50px" },
+    //   autoClose: 800,
+    // });
+    toast.update(toastId.current, {
+      render: e?.response?.data,
+      type: toast.TYPE.ERROR,
+      autoClose: 1000,
     });
     dispatch(getCartError());
   }
@@ -80,16 +125,16 @@ export const removeProductInCart = async (
   productId
 ) => {
   try {
-    // const res = await axios.delete(
-    //   `${process.env.REACT_APP_BACKEND_URL}/v1/cart/del-product-in-cart`,
-    //   userId,
-    //   productId,
-    //   {
-    //     withCredentials: true,
-    //   }
-    // );
+    console.log(userId);
+    await axios.delete(
+      `${process.env.REACT_APP_BACKEND_URL}/v1/cart/del-product-in-cart?userId=${userId}&productId=${productId}`,
+      { userId, productId },
+      {
+        withCredentials: true,
+      }
+    );
     // console.log(res.data);
-    console.log(dataCart);
+    // console.log(dataCart);
     dispatch(
       getCartSuccess({
         message: "Get product in cart successfully",

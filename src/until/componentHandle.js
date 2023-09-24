@@ -90,3 +90,13 @@ export function formatOfflineDuration(offlineAt) {
     return `${days}d`;
   }
 }
+
+export function inputOnlyNumber(event, toast) {
+  const keyCode = event.keyCode || event.which;
+  const keyValue = String.fromCharCode(keyCode);
+
+  // Chỉ cho phép nhập số (0-9)
+  if (!/^[0-9]+$/.test(keyValue)) {
+    event.preventDefault();
+  }
+}

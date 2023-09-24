@@ -37,13 +37,11 @@ const ProductDetailsPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
   }, []);
 
   const { data: detailProduct } = useQuery(["detailProduct", slug], () =>
     apiGetOneProduct(slug)
   );
-  // console.log("detailProduct: ", detailProduct);
   const listImg = [
     ...(detailProduct?.modifiedProduct?.imageMain || ""),
     ...(detailProduct?.modifiedProduct?.images || ""),
@@ -79,6 +77,7 @@ const ProductDetailsPage = () => {
       price: detailProduct?.modifiedProduct?.price,
     });
   }, [detailProduct?.modifiedProduct?.id]);
+
   return (
     <div className="px-[8%] mt-[50px] mb-28">
       <h1 className="font-bold text-[24px]">
@@ -193,16 +192,7 @@ const ProductDetailsPage = () => {
                 <span className="font-semibold">License</span>
                 <span>Personal license</span>
               </div>
-              {/* <div className="flex items-center justify-between">
-                <p className="flex items-center gap-3 font-semibold">
-                  <button className=" w-[20px] h-[20px] rounded-full flexCustom border-[2px] border-blue7">
-                    <span className="w-[8px] h-[8px] rounded-full bg-blue7"></span>
-                  </button>
-                  <span>Personal</span>
-                </p>
-                <span>$25.00USD</span>
-              </div>
-               */}
+
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue="default"
@@ -384,7 +374,9 @@ const ProductDetailsPage = () => {
         </div>
       </div>
       {/*-----------------------------------------productDetail Comment-----------------------------------------*/}
-      <CommentProduct></CommentProduct>
+      <CommentProduct
+        dataUser={detailProduct?.modifiedProduct?.user}
+      ></CommentProduct>
       {/*-----------------------------------------productDetail You May Also Like-----------------------------------------*/}
       <MoreProduct></MoreProduct>
       {/*-----------------------------------------productDetail Keep Exploring-----------------------------------------*/}

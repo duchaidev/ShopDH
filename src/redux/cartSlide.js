@@ -10,7 +10,7 @@ const initialState = {
     loading: false,
     error: false,
     data: null,
-    dataInCartPage: null,
+    // dataInCartPage: null,
   },
 };
 
@@ -40,11 +40,11 @@ export const cartSlide = createSlice({
       state.getAllProductInCart.error = false;
       state.getAllProductInCart.data = action.payload;
     },
-    getCartPageSuccess: (state, action) => {
-      state.getAllProductInCart.loading = false;
-      state.getAllProductInCart.error = false;
-      state.getAllProductInCart.dataInCartPage = action.payload;
-    },
+    // getCartPageSuccess: (state, action) => {
+    //   state.getAllProductInCart.loading = false;
+    //   state.getAllProductInCart.error = false;
+    //   state.getAllProductInCart.dataInCartPage = action.payload;
+    // },
     getCartError: (state) => {
       state.getAllProductInCart.loading = false;
       state.getAllProductInCart.error = true;

@@ -46,11 +46,14 @@ const DropdownInfo = ({ show, dataUser }) => {
         >
           {t("PROFILE")}
         </NavLink>
-        <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1">
+        <NavLink to="/profile/noti" className="px-3 py-[6px] hover:bg-blue1">
           {t("NOTIFICATION")}
         </NavLink>
-        <NavLink to="/" className="px-3 py-[6px] hover:bg-blue1 mb-2">
-          Tin nhắn
+        <NavLink
+          to="/profile/affiliate"
+          className="px-3 py-[6px] hover:bg-blue1"
+        >
+          Tiếp thị liên kết
         </NavLink>
       </div>
       <div className="flex flex-col pt-2 border-b border-blue1">
