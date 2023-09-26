@@ -103,6 +103,7 @@ const YourCart = () => {
       return updatedProducts;
     });
   };
+
   return (
     <div className="mt-[45px] px-[5%] grid grid-cols-10 gap-20">
       {/*--------------------------------------List Product--------------------------------------*/}
@@ -118,103 +119,111 @@ const YourCart = () => {
             <span>Lịch sử mua hàng</span>
           </NavLink>
         </div>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={
-                Object.values(checked).every((value) => value) &&
-                Object.keys(checked).length === dataInCart?.data?.length
-              }
-              indeterminate={
-                Object.values(checked).some((value) => value) &&
-                !Object.values(checked).every((value) => value)
-              }
-              onChange={handleCheckAll}
-            />
-          }
-        />
-        {/*--------------------------------------Items Product--------------------------------------*/}
-        {isLoading === true ? (
-          <div className="">
-            {Array.from({ length: 2 }).map((_, index) => (
-              <div
-                // className="w-full px-6 py-4 mt-3 border-t border-blue1"
-                key={index}
-              >
-                <SkeletonProductCartPage></SkeletonProductCartPage>
-              </div>
-            ))}
-          </div>
+        {dataInCart?.data?.length === 0 && isLoading === false ? (
+          <div>Giỏ hàng trống</div>
         ) : (
           <div>
-            {dataInCart?.data?.length > 0 &&
-              dataInCart?.data?.map((item) => (
-                <div
-                  className={`grid grid-cols-20 pr-6 py-4 mt-3 border-t border-blue1`}
-                  key={item.id}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={checked[item.id] || false}
-                        onChange={(event) =>
-                          handleChangeCheckItem(event, item.id)
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={
+                    Object.values(checked).every((value) => value) &&
+                    Object.keys(checked).length === dataInCart?.data?.length
+                  }
+                  indeterminate={
+                    Object.values(checked).some((value) => value) &&
+                    !Object.values(checked).every((value) => value)
+                  }
+                  onChange={handleCheckAll}
+                />
+              }
+            />
+            {/*--------------------------------------Items Product--------------------------------------*/}
+            {isLoading === true ? (
+              <div className="">
+                {Array.from({ length: 2 }).map((_, index) => (
+                  <div
+                    // className="w-full px-6 py-4 mt-3 border-t border-blue1"
+                    key={index}
+                  >
+                    <SkeletonProductCartPage></SkeletonProductCartPage>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div>
+                {dataInCart?.data?.length > 0 &&
+                  dataInCart?.data?.map((item) => (
+                    <div
+                      className={`grid grid-cols-20 pr-6 py-4 mt-3 border-t border-blue1`}
+                      key={item.id}
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={checked[item.id] || false}
+                            onChange={(event) =>
+                              handleChangeCheckItem(event, item.id)
+                            }
+                          />
                         }
                       />
-                    }
-                  />
-                  <div className="flex items-center gap-5 col-span-15">
-                    <div className="w-48 p-[6px] border rounded-sm border-blue1">
-                      <img
-                        src={convertBase64ToImage(
-                          item?.productInCart?.image || ""
-                        )}
-                        alt="img"
-                        className="w-full object-cover aspect-[7/4] rounded-sm border border-blue2"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-3 text-base">
-                      <div>
-                        <h3 className="text-lg font-medium">{item?.title}</h3>
-                        <p>
-                          <span>by </span>
-                          <span className="font-medium text-blue6">
-                            {item?.user?.username ||
-                              item?.user?.firstName +
-                                " " +
-                                item?.user?.lastName}
-                          </span>
-                        </p>
+                      <div className="flex items-center gap-5 col-span-15">
+                        <div className="w-48 p-[6px] border rounded-sm border-blue1">
+                          <img
+                            src={convertBase64ToImage(
+                              item?.productInCart?.image || ""
+                            )}
+                            alt="img"
+                            className="w-full object-cover aspect-[7/4] rounded-sm border border-blue2"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-3 text-base">
+                          <div>
+                            <h3 className="text-lg font-medium">
+                              {item?.title}
+                            </h3>
+                            <p>
+                              <span>by </span>
+                              <span className="font-medium text-blue6">
+                                {item?.user?.username ||
+                                  item?.user?.firstName +
+                                    " " +
+                                    item?.user?.lastName}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="relative">
+                            <span className="text-sm font-semibold text-gray2">
+                              License Type
+                            </span>
+                            {/* ======================== DropDown Category ======================== */}
+                            <DropDownCategoryProduct
+                              product={item}
+                              dataInCart={dataInCart}
+                              setDataInCart={setDataInCart}
+                              userId={dataUser?.id}
+                            ></DropDownCategoryProduct>
+                          </div>
+                        </div>
                       </div>
-                      <div className="relative">
-                        <span className="text-sm font-semibold text-gray2">
-                          License Type
+                      <div className="flex flex-col items-end col-span-4">
+                        <span className="text-lg font-bold">
+                          ${item?.productInCart?.price}
                         </span>
-                        {/* ======================== DropDown Category ======================== */}
-                        <DropDownCategoryProduct
-                          product={item}
-                          dataInCart={dataInCart}
-                          setDataInCart={setDataInCart}
-                          userId={dataUser?.id}
-                        ></DropDownCategoryProduct>
+                        <button
+                          className="text-base font-normal text-blue6"
+                          onClick={() => {
+                            handleDeleteProductInCart(item?.id);
+                          }}
+                        >
+                          Remove
+                        </button>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col items-end col-span-4">
-                    <span className="text-lg font-bold">
-                      ${item?.productInCart?.price}
-                    </span>
-                    <button
-                      className="text-base font-normal text-blue6"
-                      onClick={() => {
-                        handleDeleteProductInCart(item?.id);
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
+                  ))}
+              </div>
+            )}
           </div>
         )}
       </div>

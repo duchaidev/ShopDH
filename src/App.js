@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import { Route, Router, Routes } from "react-router-dom";
+import React, { Suspense, useState } from "react";
+import { Outlet, Route, Router, Routes, useParams } from "react-router-dom";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import AffiliateMarketing from "./pages/Profile/AffiliateMarketing";
@@ -58,36 +58,39 @@ const LoadingFallback = () => (
 const App = () => {
   return (
     <div className="w-[100%]">
-      <Suspense fallback={<LoadingFallback />}>
+      <Suspense fallback={<LoadingFallback></LoadingFallback>}>
         <Routes>
+          {/* -------------------------------------Auth------------------------------------- */}
+          <Route path="/register" element={<Register></Register>}></Route>
+          <Route path="/login" element={<Login></Login>}></Route>
+
           {/* -------------------------------------Main------------------------------------- */}
-          <Route path="/" element={<LayoutMain></LayoutMain>}>
+          <Route element={<LayoutMain></LayoutMain>}>
             <Route path="/" element={<HomePage></HomePage>}></Route>
             <Route
-              path="product/:slug"
+              path="/product/:slug"
               element={<ProductPage></ProductPage>}
             ></Route>
-            <Route path="cart" element={<CartPage></CartPage>}></Route>
-            <Route path="sell" element={<SellPage></SellPage>}></Route>
+            <Route path="/cart" element={<CartPage></CartPage>}></Route>
+            <Route path="/sell" element={<SellPage></SellPage>}></Route>
             <Route
-              path="sell/apply"
+              path="/sell/apply"
               element={<SellApplyPage></SellApplyPage>}
             ></Route>
             <Route
-              path="affiliates"
+              path="/affiliates"
               element={<AffiliatesPage></AffiliatesPage>}
             ></Route>
-            <Route path="blog" element={<BlogPage></BlogPage>}></Route>
+            <Route path="/blog" element={<BlogPage></BlogPage>}></Route>
             <Route
-              path="blog/:slug"
+              path="/blog/:slug"
               element={<BlogDetailsPage></BlogDetailsPage>}
             ></Route>
             <Route
-              path="product-details/:slug"
+              path="/product-details/:slug"
               element={<ProductDetailsPage></ProductDetailsPage>}
             ></Route>
-
-            {/* -------------------------------------Profile------------------------------------- */}
+            -------------------------------------Profile-------------------------------------
             <Route path="/profile" element={<LayoutProfile></LayoutProfile>}>
               <Route
                 path="my-profile"
@@ -124,10 +127,6 @@ const App = () => {
             </Route>
           </Route>
 
-          {/* -------------------------------------Auth------------------------------------- */}
-          <Route path="/register" element={<Register></Register>}></Route>
-          <Route path="/login" element={<Login></Login>}></Route>
-
           {/* -------------------------------------Seller------------------------------------- */}
           <Route path="/seller" element={<LayoutSeller></LayoutSeller>}>
             <Route path="" element={<HomeSellerPage></HomeSellerPage>}></Route>
@@ -158,5 +157,5 @@ const App = () => {
   );
 };
 
-// export default React.memo(App);
-export default App;
+export default React.memo(App);
+// export default App;

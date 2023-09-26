@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FormControlLabel, Radio, RadioGroup, Tooltip } from "@mui/material";
+import { updatePaymentProduct } from "../../apiRequest/apiRequestCart";
+import ModalWriteReview from "../productDetails/ModalWriteReview";
+
 const TotalPrice = ({ selectedProduct }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalPriceAfterDiscount, setTotalPriceAfterDiscount] = useState(0);
   const [checkDiscount, setCheckDiscount] = useState(false);
+  const [showWriteReview, setShowWriteReview] = useState(false);
   useEffect(() => {
     let totalPrice = selectedProduct?.reduce(
       (total, item) => total + item?.productInCart?.price,
@@ -14,13 +18,17 @@ const TotalPrice = ({ selectedProduct }) => {
       setTotalPriceAfterDiscount(totalPrice - totalPrice * 0.2);
     }
   }, [selectedProduct]);
-
+  console.log(selectedProduct);
   return (
     <div className="flex flex-col w-full gap-5 p-5 mt-3 border rounded-sm border-blue1">
       <span className="text-[15px] font-semibold leading-5">
         Save up to 20% with a membership, or checkout without one and pay full
         price.
       </span>
+      <ModalWriteReview
+        showWriteReview={showWriteReview}
+        setShowWriteReview={setShowWriteReview}
+      ></ModalWriteReview>
       {/*--------------------------------------Choose Type--------------------------------------*/}
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
@@ -79,7 +87,16 @@ const TotalPrice = ({ selectedProduct }) => {
         )}
       </div>
 
-      <button className="w-full py-4 text-[20px] font-bold text-white rounded-md bg-blue7">
+      <button
+        className="w-full py-4 text-[20px] font-bold text-white rounded-md bg-blue7"
+        // onClick={() => {
+        // let producId = selectedProduct.map((item) => item.id);
+        // updatePaymentProduct(selectedProduct[0].user.id, producId, "Success");
+        // }}
+        onClick={() => {
+          setShowWriteReview(true);
+        }}
+      >
         Thanh toán
       </button>
     </div>

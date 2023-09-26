@@ -22,9 +22,9 @@ root.render(
       <BrowserRouter>
         <PersistGate loading={null} persistor={persistor}>
           <App />
-          <ReactQueryDevtools />
+          <ToastContainer></ToastContainer>
+          {/* <ReactQueryDevtools /> */}
         </PersistGate>
-        <ToastContainer></ToastContainer>
       </BrowserRouter>
     </QueryClientProvider>
   </Provider>

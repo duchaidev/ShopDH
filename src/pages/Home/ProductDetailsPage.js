@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import IconDown from "../../components/header/IconDown";
 import IconDate from "../../components/icon/IconDate";
@@ -28,7 +28,8 @@ import IconTech from "../../components/icon/IconTech";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductInCart } from "../../apiRequest/apiRequestCart";
 
-const ProductDetailsPage = () => {
+const ProductDetailsPage = ({ productKey }) => {
+  const toastId = useRef(null);
   const dataCart = useSelector((state) => state.cart.getAllProductInCart);
   const { dataUser } = useSelector((state) => state?.register?.login);
   const [showDescription, setShowDescription] = useState(false);
@@ -179,7 +180,7 @@ const ProductDetailsPage = () => {
             <button
               className="w-full py-4 border-[2px] border-blue7 text-blue7 font-bold text-[18px] transition-all over:opacity-90 cursor-pointer hover:scale-95 rounded-lg"
               onClick={() => {
-                addProductInCart(dispatch, newData, dataCart);
+                addProductInCart(dispatch, newData, dataCart, toastId);
               }}
             >
               Add To Cart
@@ -404,4 +405,4 @@ const ProductDetailsPage = () => {
   );
 };
 
-export default ProductDetailsPage;
+export default React.memo(ProductDetailsPage);

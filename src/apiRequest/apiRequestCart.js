@@ -45,6 +45,25 @@ export const updateCategoryProductInCart = async (
   }
 };
 
+export const updatePaymentProduct = async (userId, productId, status) => {
+  try {
+    const res = await axios.put(
+      `${
+        process.env.REACT_APP_BACKEND_URL
+      }/v1/cart/update-payment-product-in-cart?userId=${userId}&productId=${productId.join(
+        ","
+      )}&status=${status}`,
+      {
+        withCredentials: true,
+      }
+    );
+    toast.success("Payment Success");
+    return res.data;
+  } catch (e) {
+    toast.error("Payment error!");
+  }
+};
+
 export const fetchProductCartPage = async (userId, dispatch) => {
   try {
     const res = await axios.get(
