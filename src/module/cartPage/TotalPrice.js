@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FormControlLabel, Radio, RadioGroup, Tooltip } from "@mui/material";
 import { updatePaymentProduct } from "../../apiRequest/apiRequestCart";
 import ModalWriteReview from "../productDetails/ModalWriteReview";
+import { convertBase64ToImage } from "../../until/componentHandle";
+import ModalPaymentPrice from "./ModalPaymentPrice";
 
 const TotalPrice = ({ selectedProduct }) => {
   const [totalPrice, setTotalPrice] = useState(0);
@@ -25,10 +27,60 @@ const TotalPrice = ({ selectedProduct }) => {
         Save up to 20% with a membership, or checkout without one and pay full
         price.
       </span>
-      <ModalWriteReview
-        showWriteReview={showWriteReview}
-        setShowWriteReview={setShowWriteReview}
-      ></ModalWriteReview>
+      <div
+        className={`${
+          showWriteReview ? "opacity-100 visible" : "opacity-0 invisible"
+        } fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center bg-opacity-40 bg-gray1 transition-all`}
+        onClick={() => {
+          setShowWriteReview(false);
+        }}
+      >
+        <form
+          className={`${
+            showWriteReview ? "translate-y-0" : "-translate-y-[100%]"
+          } bg-white w-[50%] p-8 rounded-md transition-all flex flex-col gap-6`}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <div className="flex justify-between">
+            <h3 className="text-[30px] text-blue6 font-semibold">Payment</h3>
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="cursor-pointer"
+              onClick={() => {
+                setShowWriteReview(false);
+              }}
+            >
+              <path
+                d="M9 0.25C4.125 0.25 0.25 4.125 0.25 9C0.25 13.875 4.125 17.75 9 17.75C13.875 17.75 17.75 13.875 17.75 9C17.75 4.125 13.875 0.25 9 0.25ZM12.375 13.375L9 10L5.625 13.375L4.625 12.375L8 9L4.625 5.625L5.625 4.625L9 8L12.375 4.625L13.375 5.625L10 9L13.375 12.375L12.375 13.375Z"
+                fill="#CCCCCC"
+              />
+            </svg>
+          </div>
+
+          <ModalPaymentPrice
+            selectedProduct={selectedProduct}
+            totalPriceAfterDiscount={totalPriceAfterDiscount}
+            totalPrice={totalPrice}
+          ></ModalPaymentPrice>
+          <div className="flex items-center justify-around px-[15%]">
+            <button
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              className="w-[140px] py-3 font-semibold text-white border-[2px] border-blue6 transition-all rounded-md hover:border-blue7 bg-blue6 hover:text-blue7 hover:bg-white hover:scale-95"
+            >
+              Thanh toán
+            </button>
+          </div>
+        </form>
+      </div>
       {/*--------------------------------------Choose Type--------------------------------------*/}
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"

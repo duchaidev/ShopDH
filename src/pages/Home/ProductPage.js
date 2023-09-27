@@ -23,6 +23,7 @@ const ProductPage = () => {
     data: productWithCategory,
     isLoading,
     isFetching,
+    refetch,
   } = useQuery({
     queryKey: ["productWithCategory", page, 1, category],
     queryFn: () => fetchProductWithCategory(page, 1, category),
@@ -72,6 +73,10 @@ const ProductPage = () => {
       });
     }
   }, [productWithCategory]);
+
+  useEffect(() => {
+    setProducts([]);
+  }, [category]);
   // useEffect(() => {
   //   const handleScroll = throttle(() => {
   //     const scrollTop =
