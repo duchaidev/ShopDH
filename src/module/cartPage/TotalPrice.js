@@ -74,7 +74,11 @@ const TotalPrice = ({ selectedProduct }) => {
               onClick={(e) => {
                 e.preventDefault();
               }}
-              className="w-[140px] py-3 font-semibold text-white border-[2px] border-blue6 transition-all rounded-md hover:border-blue7 bg-blue6 hover:text-blue7 hover:bg-white hover:scale-95"
+              className={`${
+                selectedProduct?.length === 0
+                  ? "bg-blue7 text-grayEC cursor-default"
+                  : "border-blue6 hover:border-blue7 bg-blue6 hover:text-blue7 hover:bg-white hover:scale-95"
+              } w-[140px] py-3 font-semibold text-white border-[2px]  transition-all rounded-md `}
             >
               Thanh toán
             </button>
