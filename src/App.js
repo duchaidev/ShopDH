@@ -66,7 +66,7 @@ const App = () => {
 
           {/* -------------------------------------Main------------------------------------- */}
           <Route element={<LayoutMain></LayoutMain>}>
-            {/* <Route path="/" element={<HomePage></HomePage>}></Route> */}
+            <Route path="/" element={<HomePage></HomePage>}></Route>
             <Route
               path="/product/:slug"
               element={<ProductPage></ProductPage>}

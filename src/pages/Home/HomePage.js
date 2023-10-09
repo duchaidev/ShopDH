@@ -27,18 +27,18 @@ const HomePage = () => {
       <SlideHome></SlideHome>
       <TrendingCategories isLoading={isLoading}></TrendingCategories>
       <Popular
-        title="Popular Graphics"
-        explore="Explore Graphics"
-        url="/product"
+        title="Popular Web Templates"
+        explore="Explore Web"
+        url="/product/Web"
         dataPopular={productPopular?.modifiedProducts}
         isLoading={isLoading}
       ></Popular>
       <Popular
-        title="Popular Graphics123"
-        explore="Explore Graphics"
+        title="Popular Mobile Templates"
+        explore="Explore Mobile"
         dataPopular={productPopular?.modifiedProducts}
         isLoading={isLoading}
-        url="/product"
+        url="/product/Mobile"
       ></Popular>
       <SlideFooterHomePage></SlideFooterHomePage>
       <Blog></Blog>
