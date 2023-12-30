@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ModalWriteReview from "../../module/productDetails/ModalWriteReview";
-import ItemProductHistory from "./../../module/historyProductPage/ItemProductHistory";
+import ModalWriteReview from "../../sections/productDetails/ModalWriteReview";
+import ItemProductHistory from "./../../sections/historyProductPage/ItemProductHistory";
 
 const HistoryProductPage = () => {
   const [showWriteReview, setShowWriteReview] = useState(false);

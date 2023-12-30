@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import AllProduct from "./../../module/manageProduct/AllProduct";
+import AllProduct from "./../../sections/manageProduct/AllProduct";
 import { useDispatch, useSelector } from "react-redux";
 import {
   apiGetAllProductSeller,
   fetchProductSeller,
-} from "../../apiRequest/apiRequestProduct";
+} from "../../services/apiRequestProduct";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
-import ItemManageProduct from "../../module/manageProduct/ItemManageProduct";
+import ItemManageProduct from "../../sections/manageProduct/ItemManageProduct";
 
 const classNameHeader =
   "py-5 text-center  border-b-[2px] cursor-pointer transition-all";

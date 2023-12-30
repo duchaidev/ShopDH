@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setValueDropdown } from "../../redux/dropdownSlide";
-import { apiGetCategories } from "../../apiRequest/apiRequestProduct";
+import { apiGetCategories } from "../../services/apiRequestProduct";
 import { useQuery } from "react-query";
 
 const DropDown = ({ className, showDropDown }) => {

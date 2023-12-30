@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import SlideHome from "../../module/homePage/Slide";
-import TrendingCategories from "../../module/homePage/TrendingCategories";
-import SlideFooterHomePage from "../../module/homePage/SlideFooterHomePage";
-import Blog from "../../module/homePage/Blog";
-import Popular from "../../module/homePage/Popular";
-import { fetchProductPopular } from "../../apiRequest/apiRequestProduct";
+import SlideHome from "../../sections/homePage/Slide";
+import TrendingCategories from "../../sections/homePage/TrendingCategories";
+import SlideFooterHomePage from "../../sections/homePage/SlideFooterHomePage";
+import Blog from "../../sections/homePage/Blog";
+import Popular from "../../sections/homePage/Popular";
+import { fetchProductPopular } from "../../services/apiRequestProduct";
 import { useQuery } from "react-query";
 
 const HomePage = () => {

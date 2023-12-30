@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
-import IconDown from "../../components/header/IconDown";
-import IconDate from "../../components/icon/IconDate";
-import IconSize from "../../components/icon/IconSize";
-import IconRule from "../../components/icon/IconRule";
-import IconLayer from "../../components/icon/IconLayer";
-import CommentProduct from "../../module/productDetails/CommentProduct";
-import MoreProduct from "../../module/productDetails/MoreProduct";
+import CommentProduct from "../../sections/productDetails/CommentProduct";
+import MoreProduct from "../../sections/productDetails/MoreProduct";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 // import required modules
@@ -18,16 +13,23 @@ import "swiper/css/navigation";
 import "swiper/css/free-mode";
 import { FormControlLabel, Radio, RadioGroup, Tooltip } from "@mui/material";
 import { useQuery } from "react-query";
-import { apiGetOneProduct } from "../../apiRequest/apiRequestProduct";
+import { apiGetOneProduct } from "../../services/apiRequestProduct";
 import {
   convertBase64ToImage,
   formatISODateToInputDate,
   truncateText,
-} from "../../until/componentHandle";
-import IconTech from "../../components/icon/IconTech";
+} from "../../untils/componentHandle";
 import { useDispatch, useSelector } from "react-redux";
-import { addProductInCart } from "../../apiRequest/apiRequestCart";
+import { addProductInCart } from "../../services/apiRequestCart";
 import SkeletonProductDetail from "../../components/skeleton/SkeletonProductDetail";
+import {
+  IconArrowDown,
+  IconDate,
+  IconLayer,
+  IconRule,
+  IconSize,
+  IconTech,
+} from "../../assets/icons";
 
 const ProductDetailsPage = ({ productKey }) => {
   const toastId = useRef(null);
@@ -330,7 +332,7 @@ const ProductDetailsPage = ({ productKey }) => {
                   {showDescription ? "Hidden More" : "Show more"}
                 </span>
                 <div className={`${showDescription ? "rotate-180" : ""} mt-1`}>
-                  <IconDown></IconDown>
+                  <IconArrowDown></IconArrowDown>
                 </div>
               </button>
               <div className="px-[35px] py-[30px] bg-blue2 flex justify-between items-center rounded-md">

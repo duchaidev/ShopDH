@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
-import Logo from "./../../components/header/Logo";
-import IconDown from "./../../components/header/IconDown";
-import IconSearch from "./../../components/header/IconSearch";
-import IconNoti from "./../../components/header/IconNoti";
-import IconCart from "./../../components/header/IconCart";
 import DropDown from "../../components/dropDown/DropDown";
 import DropdownInfo from "../../components/dropDown/DropdownInfo";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { convertBase64ToImage } from "../../until/componentHandle";
+import { convertBase64ToImage } from "../../untils/componentHandle";
 import { useQuery } from "react-query";
-import { apiGetCategories } from "../../apiRequest/apiRequestProduct";
+import { apiGetCategories } from "../../services/apiRequestProduct";
+import { fetchProductCart } from "../../services/apiRequestCart";
 import {
-  fetchProductCart,
-  removeProductInCart,
-} from "../../apiRequest/apiRequestCart";
+  IconArrowDown,
+  IconCart,
+  IconLogo,
+  IconNotification,
+  IconSearch,
+} from "../../assets/icons";
 
 const Header = () => {
   const [showDropDown, setShowDropDown] = useState(false);
@@ -37,6 +36,7 @@ const Header = () => {
     };
     fetchData();
   }, [dataUser?.id]);
+  console.log(category);
   return (
     <div className="h-[120px] top-0 w-screen flex flex-col px-9 border-b border-blue1 text-sm shadow-shadow bg-white z-50 fixed ">
       <div className="flex justify-between w-full mt-3">
@@ -56,7 +56,7 @@ const Header = () => {
                 }}
               />
               <span>{valueDropdown || t("SEARCH")}</span>
-              <IconDown></IconDown>
+              <IconArrowDown></IconArrowDown>
             </button>
             <input
               type="text"
@@ -68,7 +68,7 @@ const Header = () => {
           </div>
         </div>
         <NavLink to="/" className="flex flex-col items-center">
-          <Logo></Logo>
+          <IconLogo></IconLogo>
           <span className="text-base font-semibold">DevHouse</span>
         </NavLink>
         <div className="flex items-center justify-end flex-1 gap-10">
@@ -81,7 +81,7 @@ const Header = () => {
           </NavLink>
           <Tooltip title="Thông báo">
             <span className="cursor-pointer">
-              <IconNoti></IconNoti>
+              <IconNotification></IconNotification>
             </span>
           </Tooltip>
           <div className="relative ml-1">
@@ -105,12 +105,14 @@ const Header = () => {
                 />
                 <img
                   src={
-                    convertBase64ToImage(dataUser?.avatar) || "/21011598.jpg"
+                    dataUser?.avatar?.data?.length > 0
+                      ? convertBase64ToImage(dataUser?.avatar)
+                      : "/avtdf.webp"
                   }
                   alt=""
                   className="w-[25px] h-[25px] object-cover rounded-full"
                 />
-                <IconDown></IconDown>
+                <IconArrowDown></IconArrowDown>
                 <DropdownInfo show={show} dataUser={dataUser}></DropdownInfo>
               </div>
             )}
@@ -118,7 +120,7 @@ const Header = () => {
           <div className="relative group">
             <NavLink to="/cart">
               <button className="p-2 transition-all rounded-full group-hover:bg-greenText group-hover:bg-opacity-10">
-                <IconCart></IconCart>
+                <IconCart length={dataCart?.data?.data?.length}></IconCart>
               </button>
             </NavLink>
             <div className="group-hover:opacity-100 group-hover:w-[400px] group-hover:h-auto group-hover:p-2 w-0 h-0 opacity-0 overflow-hidden absolute flex flex-col gap-4 right-0 bg-[#f6f6f6] border border-[#e6e6e6] p-0 shadow-lg transition-opacity duration-200 ease-in-out">

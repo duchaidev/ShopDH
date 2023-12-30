@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { socket } from "../../until/componentHandle";
+import { socket } from "../../untils/componentHandle";
 import { useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import {
   apiGetMessage,
   apiGetUserByValue,
   getUserConversation,
-} from "../../apiRequest/apiRequestChat";
-import SearchUserChat from "../../module/message/SearchUserChat";
-import ListUserChat from "../../module/message/ListUserChat";
-import SendMessage from "../../module/message/SendMessage";
+} from "../../services/apiRequestChat";
+import SearchUserChat from "../../sections/message/SearchUserChat";
+import ListUserChat from "../../sections/message/ListUserChat";
+import SendMessage from "../../sections/message/SendMessage";
 
 const Message = () => {
   const { dataUser } = useSelector((state) => state.register.login);

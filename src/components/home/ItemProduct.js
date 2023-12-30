@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
-import IconCart from "./../header/IconCart";
 import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { convertBase64ToImage } from "../../until/componentHandle";
-import { addProductInCart } from "../../apiRequest/apiRequestCart";
-import { fetchProductCartPage } from "../../apiRequest/apiRequestCart";
+import { convertBase64ToImage } from "../../untils/componentHandle";
+import { addProductInCart } from "../../services/apiRequestCart";
+import { fetchProductCartPage } from "../../services/apiRequestCart";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
+import { IconCart } from "./../../assets/icons";
 const ItemProduct = ({
   image,
   slugProduct,

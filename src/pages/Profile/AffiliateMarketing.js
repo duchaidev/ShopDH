@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const AffiliateMarketing = () => {
   const [show, setShow] = useState(1);
-
+  const origin = window.location.origin;
+  const { dataUser } = useSelector((state) => state.register.login);
   const handleCopyToClipboard = (textToCopy) => {
     // Sử dụng API clipboard để sao chép nội dung vào clipboard
     navigator.clipboard
@@ -22,6 +25,8 @@ const AffiliateMarketing = () => {
         toast.error(`Lỗi khi sao chép vào clipboard`);
       });
   };
+
+  console.log(dataUser);
   return (
     <div className="bg-white mb-[50px]">
       <div className="flex justify-around border-b border-b-blue1">
@@ -113,14 +118,14 @@ const AffiliateMarketing = () => {
                 <div className="flex items-center w-[60%]">
                   <input
                     type="text"
-                    value={"iamhai"}
+                    value={dataUser.referralCode || "admin"}
                     className="px-3 h-[32px] border w-full border-blue1 outline-none"
                     readOnly
                   />
                   <button
                     className="h-[32px] min-w-[70px] bg-blue6 text-white"
                     onClick={() => {
-                      handleCopyToClipboard("iamhai");
+                      handleCopyToClipboard(dataUser.referralCode || "admin");
                     }}
                   >
                     COPY
@@ -134,14 +139,16 @@ const AffiliateMarketing = () => {
                 <div className="flex items-center w-[60%]">
                   <input
                     type="text"
-                    value={"linkgioithieuiamhai"}
+                    value={`${origin}/sign-up?referrerId=${dataUser.referralCode}
+                    `}
                     className="px-3 h-[32px] border w-full border-blue1 outline-none"
                     readOnly
                   />
                   <button
                     className="h-[32px] min-w-[70px] bg-blue6 text-white"
                     onClick={() => {
-                      handleCopyToClipboard("linkgioithieuiamhai");
+                      handleCopyToClipboard(`${origin}/sign-up?referrerId=${dataUser.referralCode}
+                    `);
                     }}
                   >
                     COPY

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { convertBase64ToImage, toBase64 } from "../../until/componentHandle";
+import { convertBase64ToImage, toBase64 } from "../../untils/componentHandle";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import axios from "axios";
+import axiosCustom from "../../services/api";
 
 const AddCategory = () => {
   const { dataUser } = useSelector((state) => state?.register?.login);
@@ -15,10 +15,7 @@ const AddCategory = () => {
   console.log(valueInput);
   const postCategory = async () => {
     try {
-      await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/v1/product/addcategory`,
-        valueInput
-      );
+      await axiosCustom.post(`/product/addcategory`, valueInput);
       toast.success("Thêm thành công");
     } catch (error) {
       console.log(error);

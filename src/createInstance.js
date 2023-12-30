@@ -4,7 +4,8 @@ import jwt_decode from "jwt-decode";
 const refreshToken = async () => {
   try {
     const res = await axios.post(
-      `${process.env.REACT_APP_BACKEND_URL}/v1/auth/refresh`,
+      `${process.env.REACT_APP_BACKEND_URL}/auth/refresh`,
+      null,
       {
         withCredentials: true,
       }
@@ -17,6 +18,7 @@ const refreshToken = async () => {
 };
 
 export const createAxios = (user, dispatch, stateSuccess) => {
+  console.log(user);
   const newInstance = axios.create();
   newInstance.interceptors.request.use(
     async (config) => {
@@ -29,7 +31,9 @@ export const createAxios = (user, dispatch, stateSuccess) => {
           accessToken: data.newAccessToken,
         };
 
+        console.log(refreshUser);
         await dispatch(stateSuccess(refreshUser));
+
         config.headers["token"] = "Bearer " + data.newAccessToken;
       }
       return config;
@@ -39,4 +43,26 @@ export const createAxios = (user, dispatch, stateSuccess) => {
     }
   );
   return newInstance;
+};
+
+// Hàm để xử lý lỗi phản hồi từ API
+export const handleApiResponseError = (error) => {
+  if (error.response) {
+    // Phản hồi từ API có mã lỗi
+    console.error("API Error:", error.response.status, error.response.data);
+    return error.response.data;
+  } else if (error.request) {
+    // Yêu cầu đã được gửi nhưng không nhận được phản hồi (mất kết nối)
+    console.error("API Error: No Response");
+    return { message: "No response from the server." };
+  } else {
+    // Lỗi xảy ra khi chuẩn bị yêu cầu hoặc trong quá trình xử lý
+    console.error("API Error:", error.message);
+    return { message: "An error occurred while processing the request." };
+  }
+};
+
+// Hàm để kiểm tra xem phản hồi từ API có lỗi hay không
+export const isApiResponseError = (response) => {
+  return response && response.error;
 };

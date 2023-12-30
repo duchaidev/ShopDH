@@ -1,82 +1,97 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import ItemProduct from "../../components/home/ItemProduct";
-import { fetchProductWithCategory } from "../../apiRequest/apiRequestProduct";
+import { fetchProductWithCategory } from "../../services/apiRequestProduct";
 import { useQuery } from "react-query";
 import SkeletonItem from "../../components/skeleton/SkeletonItem";
-import ProductHeader from "./../../module/productPage/ProductHeader";
-import FiltersLeft from "../../module/productPage/FiltersLeft";
-import FiltersButtonRight from "./../../module/productPage/FiltersButtonRight";
+import ProductHeader from "./../../sections/productPage/ProductHeader";
+import FiltersLeft from "../../sections/productPage/FiltersLeft";
+import FiltersButtonRight from "./../../sections/productPage/FiltersButtonRight";
 import { toast } from "react-toastify";
 import { throttle } from "lodash"; // Sử dụng lodash throttle
 
 const ProductPage = () => {
+  //-------------------------------------------Scroll leend đầu trang lần đầu tiên------------------------------------------
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { slug: category } = useParams();
   const [isActive, setIsActive] = useState(1);
   const [showFilters, setShowFilters] = useState(true);
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState([]);
   const productListRef = useRef(null);
-  // const [isFixed, setIsFixed] = useState(false);
-  //-------------------------------------------Fetch Data------------------------------------------
-  const {
-    data: productWithCategory,
-    isLoading,
-    isFetching,
-    refetch,
-  } = useQuery({
-    queryKey: ["productWithCategory", page, 1, category],
-    queryFn: () => fetchProductWithCategory(page, 1, category),
-    keepPreviousData: true,
-  });
-  //-------------------------------------------Scroll leend đầu trang lần đầu tiên------------------------------------------
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [hiddenButton, setHiddenButton] = useState(true);
+
+  const handleFetchMoreData = async (valuePage, keepPreviousData = true) => {
+    if (keepPreviousData) {
+      setIsFetchingMore(true);
+    }
+    if (!keepPreviousData) {
+      setIsLoading(true);
+    }
+    try {
+      const data = await fetchProductWithCategory(valuePage, 1, category);
+      if (keepPreviousData) {
+        if (data?.modifiedProducts?.length > 0) {
+          setProducts([...products, ...data?.modifiedProducts]);
+          setIsFetchingMore(false);
+        }
+      } else {
+        setProducts(data?.modifiedProducts);
+        setHiddenButton(false);
+        setIsLoading(false);
+      }
+      if (data?.modifiedProducts?.length === 0) {
+        toast.info("Hết sản phẩm để lấy thêm!", {
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+        });
+        setHiddenButton(true);
+        setIsFetchingMore(false);
+        setIsLoading(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const fetchMoreData = async () => {
     setPage(page + 1);
+    handleFetchMoreData(page + 1);
   };
-  useEffect(() => {
-    const productListElement = productListRef.current;
-    const handleScroll = () => {
-      // Kiểm tra xem người dùng đã lướt đến cuối danh sách hay chưa
-      if (
-        productListElement.scrollHeight - productListElement.scrollTop <=
-        productListElement.clientHeight + 100
-      ) {
-        // Nếu lướt đến cuối, gọi hàm để tải thêm dữ liệu
-        fetchMoreData();
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    console.log(productListElement);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   useEffect(() => {
-    if (productWithCategory?.modifiedProducts) {
-      setProducts((prevProducts) => [
-        ...prevProducts,
-        ...productWithCategory?.modifiedProducts,
-      ]);
-    }
-    if (productWithCategory?.modifiedProducts.length === 0) {
-      toast.info("Hết sản phẩm để lấy thêm!", {
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-      });
-    }
-  }, [productWithCategory]);
-
-  useEffect(() => {
-    setProducts([]);
+    setPage(1);
+    handleFetchMoreData(1, false);
   }, [category]);
+
+  // useEffect(() => {
+  //   const productListElement = productListRef.current;
+  //   const handleScroll = () => {
+  //     // Kiểm tra xem người dùng đã lướt đến cuối danh sách hay chưa
+  //     if (
+  //       productListElement.scrollHeight - productListElement.scrollTop <=
+  //       productListElement.clientHeight + 100
+  //     ) {
+  //       // Nếu lướt đến cuối, gọi hàm để tải thêm dữ liệu
+  //       fetchMoreData();
+  //     }
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll);
+  //   console.log(productListElement);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
+
   // useEffect(() => {
   //   const handleScroll = throttle(() => {
   //     const scrollTop =
@@ -142,12 +157,12 @@ const ProductPage = () => {
             }`}
           >
             {isLoading === true
-              ? Array.from({ length: 4 }).map((_, index) => (
+              ? Array.from({ length: 4 })?.map((_, index) => (
                   <div className="w-full h-full" key={index}>
                     <SkeletonItem></SkeletonItem>
                   </div>
                 ))
-              : products.map((item, index) => (
+              : products?.map((item, index) => (
                   <ItemProduct
                     key={item?.id}
                     image={item?.imageMain[0] || ""}
@@ -164,15 +179,15 @@ const ProductPage = () => {
                 ))}
           </div>
           <div className="w-full mt-6 flexCustom">
-            {productWithCategory?.modifiedProducts?.length === 0 ? (
+            {hiddenButton ? (
               ""
             ) : (
               <button
                 className="w-[320px] h-[40px] flexCustom border border-blue1 rounded-lg gap-4 hover:bg-blue1 transition-all"
                 onClick={fetchMoreData}
-                // disabled={isFetchingMore}
+                disabled={isFetchingMore}
               >
-                {isFetching ? "Đang tải..." : "Xem thêm 20 sản phẩm"}
+                {isFetchingMore ? "Đang tải..." : "Xem thêm 20 sản phẩm"}
                 <svg
                   width="10"
                   height="5"

@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
-import { convertBase64ToImage, toBase64 } from "../../until/componentHandle";
+import { convertBase64ToImage, toBase64 } from "../../untils/componentHandle";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
   apiAddProduct,
   apiEditProduct,
   apiGetOneProduct,
-} from "../../apiRequest/apiRequestProduct";
+} from "../../services/apiRequestProduct";
 import Switch from "@mui/material/Switch";
 import TextEditor from "../../components/TextEditor";
 import { useParams } from "react-router-dom";
-import TitleProduct from "../../module/addProductPage/TitleProduct";
-import ImageProduct from "../../module/addProductPage/ImageProduct";
-import ClassifyProduct from "./../../module/addProductPage/ClassifyProduct";
-import UrlDemo from "../../module/addProductPage/UrlDemo";
-import UrlDownload from "../../module/addProductPage/UrlDownload";
-import TechnologyUse from "./../../module/addProductPage/TechnologyUse";
-import CategoryProduct from "./../../module/addProductPage/CategoryProduct";
+import TitleProduct from "../../sections/addProductPage/TitleProduct";
+import ImageProduct from "../../sections/addProductPage/ImageProduct";
+import ClassifyProduct from "./../../sections/addProductPage/ClassifyProduct";
+import UrlDemo from "../../sections/addProductPage/UrlDemo";
+import UrlDownload from "../../sections/addProductPage/UrlDownload";
+import TechnologyUse from "./../../sections/addProductPage/TechnologyUse";
+import CategoryProduct from "./../../sections/addProductPage/CategoryProduct";
 
 const AddProductSellerPage = () => {
   const { id } = useParams();

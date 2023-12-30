@@ -3,6 +3,8 @@ import { Outlet, Route, Router, Routes, useParams } from "react-router-dom";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import AffiliateMarketing from "./pages/Profile/AffiliateMarketing";
+import DepositWithdrawal from "./pages/Profile/DepositWithdrawal";
+import LayoutAuth from "./layouts/LayoutAuth";
 
 const LayoutMain = React.lazy(() => import("./layouts/LayoutMain"));
 const LayoutProfile = React.lazy(() => import("./layouts/LayoutProfile"));
@@ -23,9 +25,7 @@ const CartPage = React.lazy(() => import("./pages/Home/CartPage"));
 const HistoryProductPage = React.lazy(() =>
   import("./pages/Profile/HistoryProductPage")
 );
-const DepositWithdrawal = React.lazy(() =>
-  import("./pages/Profile/DepositWithdrawal")
-);
+
 const MyProfilePage = React.lazy(() => import("./pages/Profile/MyProfilePage"));
 const ChangePasswordPage = React.lazy(() =>
   import("./pages/Profile/ChangePasswordPage")
@@ -61,8 +61,13 @@ const App = () => {
       <Suspense fallback={<LoadingFallback></LoadingFallback>}>
         <Routes>
           {/* -------------------------------------Auth------------------------------------- */}
-          <Route path="/register" element={<Register></Register>}></Route>
-          <Route path="/login" element={<Login></Login>}></Route>
+          <Route element={<LayoutAuth></LayoutAuth>}>
+            <Route
+              path="/sign-up/:referrerId?"
+              element={<Register></Register>}
+            ></Route>
+            <Route path="/login" element={<Login></Login>}></Route>
+          </Route>
 
           {/* -------------------------------------Main------------------------------------- */}
           <Route element={<LayoutMain></LayoutMain>}>

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { locales } from "../../i18n/i18n";
 import { useDispatch } from "react-redux";
-import { apiLogout } from "../../apiRequest/apiRequestAuth";
+import { apiLogout } from "../../services/apiRequestAuth";
 
 const DropdownInfo = ({ show, dataUser }) => {
   const dispatch = useDispatch();

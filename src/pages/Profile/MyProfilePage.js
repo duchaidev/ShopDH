@@ -5,14 +5,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { apiEditUser } from "../../apiRequest/apiRequestAuth";
+import { apiEditUser } from "../../services/apiRequestAuth";
 import { loginSuccess } from "../../redux/authSlice";
 import { createAxios } from "../../createInstance";
 import {
   convertBase64ToImage,
   formatISODateToInputDate,
   toBase64,
-} from "../../until/componentHandle";
+} from "../../untils/componentHandle";
 import { toast } from "react-toastify";
 
 const MyProfilePage = () => {
@@ -29,9 +29,9 @@ const MyProfilePage = () => {
     editUsername: false,
     editPhone: false,
   });
-  console.log(dataUser);
+  // console.log(dataUser);
   const formattedBirthday = formatISODateToInputDate(dataUser?.birthday);
-  // console.log(formattedBirthday);
+
   const [valueInput, setValueInput] = useState({
     id: dataUser?.id,
     sex: dataUser?.sex || "",
@@ -124,9 +124,9 @@ const MyProfilePage = () => {
               <label htmlFor="" className="font-normal text-end text-gray2">
                 Họ và tên
               </label>
-              <label htmlFor="name" className="font-normal text-end text-gray2">
+              {/* <label htmlFor="name" className="font-normal text-end text-gray2">
                 Tên đăng nhập
-              </label>
+              </label> */}
               <label htmlFor="" className="font-normal text-end text-gray2">
                 Email
               </label>
@@ -144,7 +144,7 @@ const MyProfilePage = () => {
               <span className="font-medium">
                 {dataUser?.firstName} {dataUser?.lastName}
               </span>
-              {dataUser?.username && handleInput.editUsername === false ? (
+              {/* {dataUser?.username && handleInput.editUsername === false ? (
                 <p className="flex items-center gap-3">
                   <span className="font-medium text-black">
                     {dataUser?.username}
@@ -170,7 +170,7 @@ const MyProfilePage = () => {
                   }}
                   className="px-2 focus:shadow-[0_0_4px_0_#00c09e] border-blue1 focus:border-blue6 transition-all w-[70%] py-1 outline-none rounded-sm text-[14px] border"
                 />
-              )}
+              )} */}
               <p className="flex items-center gap-3">
                 <span className="font-medium text-black">
                   leduchai2k3@gmail.com

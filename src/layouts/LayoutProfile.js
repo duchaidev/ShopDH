@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
+import { convertBase64ToImage } from "../untils/componentHandle";
 
 const LayoutProfile = () => {
   const [showProfile, setShowProfile] = useState(true);
+  const { dataUser } = useSelector((state) => state.register.login);
   return (
     <div className="px-[3%] grid gap-10 grid-cols-5 pt-8 bg-bgProfile">
       <div className="col-span-1">
@@ -10,13 +13,20 @@ const LayoutProfile = () => {
         <div className="flex items-center gap-4 pb-8 border-b border-blue1">
           <div className="w-[55px] h-[55px] rounded-full overflow-hidden">
             <img
-              src="/21011598.jpg"
+              src={
+                dataUser?.avatar?.data?.length > 0
+                  ? convertBase64ToImage(dataUser?.avatar)
+                  : "/avtdf.webp"
+              }
               alt=""
               className="object-cover w-full h-full overflow-hidden border rounded-full border-blue1"
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-semibold">Le Duc Hai</span>
+            <span className="text-base font-semibold">
+              {" "}
+              {dataUser?.firstName} {dataUser?.lastName}
+            </span>
             <p className="flex items-center gap-1">
               <span>
                 <svg
@@ -32,7 +42,12 @@ const LayoutProfile = () => {
                   />
                 </svg>
               </span>
-              <span className="text-sm text-gray2">Sửa hồ sơ</span>
+              <NavLink
+                to={"/profile/my-profile"}
+                className="text-sm text-gray2"
+              >
+                Sửa hồ sơ
+              </NavLink>
             </p>
           </div>
         </div>

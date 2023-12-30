@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { updateCategoryProductInCart } from "../../apiRequest/apiRequestCart";
+import { updateCategoryProductInCart } from "../../services/apiRequestCart";
 
 const DropDownCategoryProduct = ({
   product,

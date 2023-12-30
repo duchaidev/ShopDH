@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { fetchProductSeller } from "../../apiRequest/apiRequestProduct";
+import { fetchProductSeller } from "../../services/apiRequestProduct";
 import { useQuery, useQueryClient } from "react-query";
 
 const HomeSellerPage = () => {

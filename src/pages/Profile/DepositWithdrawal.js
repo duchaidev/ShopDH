@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import Deposit from "../../module/DepositWithdrawal/Deposit";
-import Withdrawal from "../../module/DepositWithdrawal/Withdrawal";
+import Deposit from "../../sections/depositWithdrawal/Deposit";
+import Withdrawal from "../../sections/depositWithdrawal/Withdrawal";
 
 const DepositWithdrawal = () => {
   const [deposit, setDeposit] = useState(true);

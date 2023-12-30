@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import Popular from "../../module/homePage/Popular";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { fetchProductCartPage } from "../../apiRequest/apiRequestCart";
+import React from "react";
+import Popular from "../../sections/homePage/Popular";
 import { useQuery } from "react-query";
-import { convertBase64ToImage } from "../../until/componentHandle";
-import { fetchProductPopular } from "./../../apiRequest/apiRequestProduct";
-import YourCart from "../../module/cartPage/YourCart";
+import { fetchProductPopular } from "./../../services/apiRequestProduct";
+import YourCart from "../../sections/cartPage/YourCart";
 
 const CartPage = () => {
   document.title = "Cart Page";

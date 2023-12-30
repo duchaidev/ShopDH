@@ -1,7 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 const AffiliatesPage = () => {
+  const { dataUser } = useSelector((state) => state.register.login);
   return (
     <div className="w-full h-[90vh] flex flex-col items-center justify-center gap-9">
       <img src="/partner-hero.png" alt="affilate" className="h-[30vh]" />
@@ -14,7 +16,7 @@ const AffiliatesPage = () => {
         10% từ giao dịch tiếp theo của khách hàng đó.
       </p>
       <NavLink
-        to={"/"}
+        to={dataUser?.id ? "/profile/affiliate" : "/login"}
         className="px-12 py-5 rounded-md text-[18px] font-medium hover:scale-95 transition-all text-white bg-blue6"
       >
         Lấy mã giới thiệu
